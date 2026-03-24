@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio — Mechanical & Robotics Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       EASY CUSTOMIZATION ZONE — change these variables to restyle
+       the entire site instantly
+    ============================================================ */
+    :root {
+      --accent:       #e8872a;       /* main amber/orange accent */
+      --accent-dim:   #9b5a18;       /* dimmer version */
+      --accent-glow:  rgba(232,135,42,0.15);
+      --bg:           #0c0c0e;       /* page background */
+      --surface:      #131316;       /* card/section surface */
+      --surface-2:    #1a1a1f;       /* elevated surface */
+      --border:       #222228;       /* subtle borders */
+      --border-light: #2e2e38;       /* lighter borders */
+      --text:         #e8e6e0;       /* primary text */
+      --text-muted:   #6b6a72;       /* muted text */
+      --text-dim:     #9998a3;       /* mid text */
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'Inter', sans-serif;
+      --radius:       6px;
+      --radius-lg:    12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Subtle grid texture */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    * { position: relative; z-index: 1; }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent-dim); border-radius: 2px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 3rem;
+      background: rgba(12,12,14,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 800; font-size: 1rem;
+      letter-spacing: 0.04em; text-decoration: none;
+      color: var(--text);
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 0.25rem; align-items: center; }
+    .nav-links a {
+      padding: 0.4rem 0.9rem;
+      font-size: 0.78rem; font-weight: 400; letter-spacing: 0.06em;
+      text-decoration: none; color: var(--text-muted);
+      border-radius: var(--radius);
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); background: var(--surface-2); }
+    .nav-cta {
+      padding: 0.45rem 1.1rem !important;
+      background: var(--accent) !important;
+      color: #000 !important; font-weight: 500 !important;
+      border-radius: var(--radius) !important;
+    }
+    .nav-cta:hover { background: #f09540 !important; color: #000 !important; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 8rem 3rem 5rem;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 2rem;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block;
+      width: 28px; height: 1.5px; background: var(--accent);
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      font-weight: 800; line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.8rem;
+    }
+    h1 .line2 { color: var(--text-muted); }
+    h1 .accent-word { color: var(--accent); }
+    .hero-desc {
+      font-size: 1.05rem; color: var(--text-dim); font-weight: 300;
+      max-width: 520px; line-height: 1.8; margin-bottom: 3rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 5rem; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.85rem 2rem; border-radius: var(--radius);
+      background: var(--accent); color: #000;
+      font-family: var(--font-body); font-size: 0.85rem; font-weight: 500;
+      text-decoration: none; letter-spacing: 0.04em;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: #f09540; transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.85rem 2rem; border-radius: var(--radius);
+      background: transparent; color: var(--text-dim);
+      border: 1px solid var(--border-light);
+      font-family: var(--font-body); font-size: 0.85rem; font-weight: 400;
+      text-decoration: none; letter-spacing: 0.04em;
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+    .btn-secondary:hover { border-color: var(--accent-dim); color: var(--text); transform: translateY(-1px); }
+
+    .hero-stats {
+      display: flex; gap: 3rem; padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .hero-stat-val {
+      font-family: var(--font-display);
+      font-size: 2rem; font-weight: 800; color: var(--accent);
+      line-height: 1;
+    }
+    .hero-stat-label {
+      font-size: 0.72rem; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.3rem;
+    }
+
+    /* ── SECTION WRAPPER ── */
+    .section-wrap {
+      max-width: 1200px; margin: 0 auto;
+      padding: 6rem 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .section-label::before {
+      content: ''; display: block;
+      width: 20px; height: 1.5px; background: var(--accent);
+    }
+    h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 800; letter-spacing: -0.02em;
+      margin-bottom: 0.8rem; line-height: 1.1;
+    }
+    .section-sub {
+      color: var(--text-muted); font-size: 0.9rem;
+      max-width: 480px; margin-bottom: 3.5rem;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: start;
+    }
+    .about-text p {
+      color: var(--text-dim); line-height: 1.9; margin-bottom: 1.1rem; font-size: 0.95rem;
+    }
+    .about-text p:first-child { color: var(--text); font-size: 1rem; }
+    .about-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.8rem; }
+    .chip {
+      padding: 0.4rem 1rem; border-radius: 99px;
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.04em;
+      background: var(--surface-2); border: 1px solid var(--border-light);
+      color: var(--text-dim);
+    }
+    .chip.active { background: var(--accent-glow); border-color: var(--accent-dim); color: var(--accent); }
+
+    .about-card {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 1.8rem;
+    }
+    .about-card-title {
+      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1.4rem; padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .spec-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      padding: 0.7rem 0; border-bottom: 1px solid var(--border);
+      font-size: 0.82rem;
+    }
+    .spec-row:last-child { border-bottom: none; }
+    .spec-key { color: var(--text-muted); }
+    .spec-val { color: var(--text); text-align: right; }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.75rem; color: #4caf7d;
+    }
+    .status-badge::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: #4caf7d;
+      box-shadow: 0 0 6px #4caf7d;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    /* ── PROJECTS ── */
+    .projects-list { display: flex; flex-direction: column; gap: 1.5px; }
+
+    /* Project card collapsed */
+    .project-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .project-item:hover { border-color: var(--border-light); }
+    .project-item.open { border-color: var(--accent-dim); }
+
+    .project-header {
+      display: grid;
+      grid-template-columns: 48px 1fr auto auto;
+      align-items: center; gap: 1.5rem;
+      padding: 1.4rem 1.8rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .project-num {
+      font-family: var(--font-display);
+      font-size: 0.7rem; font-weight: 700;
+      color: var(--accent-dim); letter-spacing: 0.1em;
+      text-align: center;
+    }
+    .project-title-area h3 {
+      font-family: var(--font-display);
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--text); margin-bottom: 0.2rem;
+    }
+    .project-title-area .project-tagline {
+      font-size: 0.78rem; color: var(--text-muted);
+    }
+    .project-tags-inline { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .tag-pill {
+      padding: 0.25rem 0.7rem; border-radius: 99px;
+      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.04em;
+      background: var(--surface-2); border: 1px solid var(--border-light);
+      color: var(--text-muted);
+    }
+    .project-toggle {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--surface-2); border: 1px solid var(--border-light);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 1rem;
+      transition: background 0.2s, transform 0.3s, color 0.2s;
+      flex-shrink: 0;
+    }
+    .project-item.open .project-toggle {
+      background: var(--accent-glow);
+      border-color: var(--accent-dim);
+      color: var(--accent);
+      transform: rotate(45deg);
+    }
+
+    /* Project expanded docs panel */
+    .project-docs {
+      display: none;
+      border-top: 1px solid var(--border);
+    }
+    .project-item.open .project-docs { display: block; }
+
+    .docs-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    }
+    .doc-section {
+      padding: 2rem 1.8rem;
+      border-right: 1px solid var(--border);
+    }
+    .doc-section:last-child { border-right: none; }
+    .doc-section:nth-child(n+3) { border-top: 1px solid var(--border); }
+    .doc-section-title {
+      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .doc-section p {
+      font-size: 0.85rem; color: var(--text-dim); line-height: 1.8;
+    }
+    .doc-spec-list { list-style: none; }
+    .doc-spec-list li {
+      display: flex; justify-content: space-between;
+      font-size: 0.82rem; padding: 0.45rem 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+    .doc-spec-list li:last-child { border-bottom: none; }
+    .doc-spec-list span { color: var(--text); font-weight: 400; }
+    .doc-outcomes { display: flex; flex-direction: column; gap: 0.6rem; }
+    .outcome-item {
+      display: flex; gap: 0.8rem; align-items: flex-start;
+      font-size: 0.82rem; color: var(--text-dim); line-height: 1.6;
+    }
+    .outcome-item::before {
+      content: '→'; color: var(--accent); font-size: 0.8rem;
+      flex-shrink: 0; margin-top: 0.1rem;
+    }
+    .doc-links { display: flex; flex-direction: column; gap: 0.6rem; }
+    .doc-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.8rem; color: var(--text-muted); text-decoration: none;
+      padding: 0.55rem 1rem; border-radius: var(--radius);
+      border: 1px solid var(--border-light);
+      background: var(--surface-2);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .doc-link:hover { border-color: var(--accent-dim); color: var(--accent); }
+    .doc-link-icon { font-size: 0.9rem; }
+
+    /* ── SKILLS ── */
+    .skills-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+    }
+    .skill-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.8rem;
+      transition: border-color 0.2s;
+    }
+    .skill-card:hover { border-color: var(--border-light); }
+    .skill-card-icon {
+      font-size: 1.5rem; margin-bottom: 1rem;
+    }
+    .skill-card-title {
+      font-family: var(--font-display);
+      font-size: 0.9rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      color: var(--text); margin-bottom: 1.4rem;
+    }
+    .skill-entry {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.6rem 0; border-bottom: 1px solid var(--border);
+      font-size: 0.82rem;
+    }
+    .skill-entry:last-child { border-bottom: none; }
+    .skill-entry-name { color: var(--text-dim); }
+    .skill-dots { display: flex; gap: 3px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border-light); }
+    .dot.on { background: var(--accent); }
+    .dot.on-dim { background: var(--accent-dim); }
+
+    /* ── CONTACT ── */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+    .contact-intro p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.9; margin-bottom: 1rem; }
+    .contact-intro a { color: var(--accent); text-decoration: none; }
+    .contact-intro a:hover { text-decoration: underline; }
+    .contact-cards { display: flex; flex-direction: column; gap: 0.6rem; }
+    .contact-card {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.2rem 1.4rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); text-decoration: none;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    }
+    .contact-card:hover { border-color: var(--accent-dim); background: var(--surface-2); transform: translateX(3px); }
+    .contact-card-left { display: flex; align-items: center; gap: 1rem; }
+    .contact-card-icon {
+      width: 36px; height: 36px; border-radius: var(--radius);
+      background: var(--accent-glow); border: 1px solid var(--accent-dim);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .contact-card-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.15rem; }
+    .contact-card-val { font-size: 0.88rem; color: var(--text); }
+    .contact-card-arrow { color: var(--text-muted); font-size: 0.9rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 3rem;
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.75rem; color: var(--text-muted);
+    }
+    footer a { color: var(--text-muted); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    /* ── REVEAL ANIMATIONS ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.on { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      #hero, .section-wrap { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .docs-grid { grid-template-columns: 1fr; }
+      .doc-section { border-right: none !important; }
+      .doc-section:nth-child(n+2) { border-top: 1px solid var(--border); }
+      .project-header { grid-template-columns: 40px 1fr auto; }
+      .project-tags-inline { display: none; }
+      .hero-stats { gap: 1.8rem; flex-wrap: wrap; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     NAV — Edit your name in .nav-logo
+═══════════════════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="#hero">ALEX<span>.</span>MORGAN</a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact">Contact</a>
+    <a href="#contact" class="nav-cta">Hire Me</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     HERO — Edit headline, description, and stats
+═══════════════════════════════════════════════ -->
+<section id="hero">
+  <p class="hero-eyebrow reveal">Mechanical &amp; Robotics Engineering Student</p>
+  <h1 class="reveal reveal-delay-1">
+    Building the<br>
+    <span class="line2">machines of</span><br>
+    <span class="accent-word">tomorrow.</span>
+  </h1>
+  <p class="hero-desc reveal reveal-delay-2">
+    Undergraduate focused on robotics, automation, and precision mechanical design.
+    I build systems that move, sense, and adapt — from concept to fabrication.
+  </p>
+  <div class="hero-actions reveal reveal-delay-3">
+    <a href="#projects" class="btn-primary">View My Projects ↓</a>
+    <a href="#contact" class="btn-secondary">Get in Touch</a>
+  </div>
+  <div class="hero-stats reveal reveal-delay-3">
+    <!-- ✏️ Edit these stats to match yours -->
+    <div>
+      <div class="hero-stat-val">8+</div>
+      <div class="hero-stat-label">Projects Built</div>
+    </div>
+    <div>
+      <div class="hero-stat-val">3rd</div>
+      <div class="hero-stat-label">Year Undergrad</div>
+    </div>
+    <div>
+      <div class="hero-stat-val">5</div>
+      <div class="hero-stat-label">Tools Mastered</div>
+    </div>
+    <div>
+      <div class="hero-stat-val">2</div>
+      <div class="hero-stat-label">Lab Positions</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     ABOUT — Edit bio, specs, and interest chips
+═══════════════════════════════════════════════ -->
+<div id="about" class="section-wrap">
+  <p class="section-label reveal">About Me</p>
+  <h2 class="reveal">Who I am.</h2>
+  <p class="section-sub reveal">Engineering student. Builder. Problem solver.</p>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <!-- ✏️ Edit your bio paragraphs here -->
+      <p>I'm a third-year Mechanical Engineering student specializing in robotics and automation systems. I'm drawn to the intersection of mechanical design, embedded control, and real-world fabrication.</p>
+      <p>I've worked on projects ranging from robotic arm kinematics to precision CNC-machined components — always pushing to understand both the math and the metal. I care about designs that are elegant, functional, and manufacturable.</p>
+      <p>Currently seeking internship opportunities where I can contribute to teams building intelligent mechanical systems.</p>
+      <!-- ✏️ Edit interest chips — add or remove as needed -->
+      <div class="about-chips">
+        <span class="chip active">Robotics</span>
+        <span class="chip active">Automation</span>
+        <span class="chip active">CAD / SolidWorks</span>
+        <span class="chip active">CNC Machining</span>
+        <span class="chip">ROS</span>
+        <span class="chip">Embedded Systems</span>
+        <span class="chip">FDM 3D Printing</span>
+        <span class="chip">Kinematics</span>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div class="about-card">
+        <div class="about-card-title">Quick Specs</div>
+        <!-- ✏️ Edit your personal details here -->
+        <div class="spec-row"><span class="spec-key">Degree</span><span class="spec-val">B.S. Mechanical Engineering</span></div>
+        <div class="spec-row"><span class="spec-key">University</span><span class="spec-val">Georgia Tech</span></div>
+        <div class="spec-row"><span class="spec-key">Year</span><span class="spec-val">Junior (3rd Year)</span></div>
+        <div class="spec-row"><span class="spec-key">Focus</span><span class="spec-val">Robotics & Automation</span></div>
+        <div class="spec-row"><span class="spec-key">Location</span><span class="spec-val">Tucker, Georgia</span></div>
+        <div class="spec-row">
+          <span class="spec-key">Status</span>
+          <span class="spec-val"><span class="status-badge">Open to Internships</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PROJECTS — Click any project to expand docs
+     HOW TO ADD A PROJECT:
+     1. Copy one entire <div class="project-item"> block
+     2. Paste it below the last one
+     3. Edit the data-project, title, tagline, tags
+     4. Fill in the 4 doc sections inside .docs-grid
+═══════════════════════════════════════════════ -->
+<div id="projects" class="section-wrap">
+  <p class="section-label reveal">Projects</p>
+  <h2 class="reveal">What I've built.</h2>
+  <p class="section-sub reveal">Click any project to expand full documentation — specs, process, outcomes, and links.</p>
+
+  <div class="projects-list">
+
+    <!-- ── PROJECT 1 ── -->
+    <div class="project-item reveal" data-project="1">
+      <div class="project-header" onclick="toggleProject(this)">
+        <div class="project-num">01</div>
+        <div class="project-title-area">
+          <h3>6-DOF Robotic Arm</h3>
+          <div class="project-tagline">Design, simulation & fabrication of a desktop robotic manipulator</div>
+        </div>
+        <div class="project-tags-inline">
+          <span class="tag-pill">SolidWorks</span>
+          <span class="tag-pill">ROS</span>
+          <span class="tag-pill">Arduino</span>
+          <span class="tag-pill">3D Print</span>
+        </div>
+        <div class="project-toggle">+</div>
+      </div>
+      <div class="project-docs">
+        <div class="docs-grid">
+          <!-- ✏️ OVERVIEW — Edit project description -->
+          <div class="doc-section">
+            <div class="doc-section-title">Overview</div>
+            <p>Designed and built a 6-degree-of-freedom desktop robotic arm capable of pick-and-place operations. Full pipeline from kinematic modeling in MATLAB, CAD in SolidWorks, to fabrication and control via ROS and Arduino Mega.</p>
+          </div>
+          <!-- ✏️ SPECS — Edit technical specifications -->
+          <div class="doc-section">
+            <div class="doc-section-title">Technical Specs</div>
+            <ul class="doc-spec-list">
+              <li>Reach <span>420 mm</span></li>
+              <li>Payload <span>250 g</span></li>
+              <li>DOF <span>6 (revolute joints)</span></li>
+              <li>Actuators <span>MG996R Servos</span></li>
+              <li>Controller <span>Arduino Mega + ROS</span></li>
+              <li>Material <span>PLA / PETG, Aluminum inserts</span></li>
+            </ul>
+          </div>
+          <!-- ✏️ OUTCOMES — Edit results and learnings -->
+          <div class="doc-section">
+            <div class="doc-section-title">Outcomes & Learnings</div>
+            <div class="doc-outcomes">
+              <div class="outcome-item">Achieved ±2mm repeatability in pick-and-place task</div>
+              <div class="outcome-item">Implemented forward & inverse kinematics from scratch</div>
+              <div class="outcome-item">Integrated ROS MoveIt! for path planning</div>
+              <div class="outcome-item">Presented at university engineering showcase</div>
+            </div>
+          </div>
+          <!-- ✏️ LINKS — Edit project links -->
+          <div class="doc-section">
+            <div class="doc-section-title">Links & Resources</div>
+            <div class="doc-links">
+              <a href="#" class="doc-link"><span class="doc-link-icon">⬡</span> GitHub Repository</a>
+              <a href="#" class="doc-link"><span class="doc-link-icon">◈</span> CAD Files (GrabCAD)</a>
+              <a href="#" class="doc-link"><span class="doc-link-icon">▶</span> Demo Video</a>
+              <a href="#" class="doc-link"><span class="doc-link-icon">↓</span> Project Report PDF</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROJECT 2 ── -->
+    <div class="project-item reveal reveal-delay-1" data-project="2">
+      <div class="project-header" onclick="toggleProject(this)">
+        <div class="project-num">02</div>
+        <div class="project-title-area">
+          <h3>Autonomous Line-Following Robot</h3>
+          <div class="project-tagline">PID-controlled differential drive bot with sensor array</div>
+        </div>
+        <div class="project-tags-inline">
+          <span class="tag-pill">C++</span>
+          <span class="tag-pill">PID Control</span>
+          <span class="tag-pill">PCB Design</span>
+          <span class="tag-pill">Solidworks</span>
+        </div>
+        <div class="project-toggle">+</div>
+      </div>
+      <div class="project-docs">
+        <div class="docs-grid">
+          <div class="doc-section">
+            <div class="doc-section-title">Overview</div>
+            <p>Built a differential drive robot with an 8-channel IR sensor array and custom PID controller for high-speed line following. Chassis designed in SolidWorks, custom PCB designed in EasyEDA, programmed in C++ on STM32.</p>
+          </div>
+          <div class="doc-section">
+            <div class="doc-section-title">Technical Specs</div>
+            <ul class="doc-spec-list">
+              <li>Chassis <span>Custom laser-cut acrylic</span></li>
+              <li>MCU <span>STM32F103C8T6</span></li>
+              <li>Sensors <span>8x TCRT5000 IR</span></li>
+              <li>Drive <span>Differential (2x N20 motors)</span></li>
+              <li>Control <span>Tuned PID (Kp/Ki/Kd)</span></li>
+              <li>Top Speed <span>1.2 m/s on track</span></li>
+            </ul>
+          </div>
+          <div class="doc-section">
+            <div class="doc-section-title">Outcomes & Learnings</div>
+            <div class="doc-outcomes">
+              <div class="outcome-item">2nd place in inter-university robotics competition</div>
+              <div class="outcome-item">Tuned PID manually — learned systematic approach</div>
+              <div class="outcome-item">Designed and ordered first custom PCB</div>
+              <div class="outcome-item">Lap time reduced 40% after control tuning</div>
+            </div>
+          </div>
+          <div class="doc-section">
+            <div class="doc-section-title">Links & Resources</div>
+            <div class="doc-links">
+              <a href="#" class="doc-link"><span class="doc-link-icon">⬡</span> GitHub Repository</a>
+              <a href="#" class="doc-link"><span class="doc-link-icon">◈</span> PCB Schematic</a>
+              <a href="#" class="doc-link"><span class="doc-link-icon">▶</span> Competition Run Video</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROJECT 3 ── -->
+    <div class="project-item reveal reveal-delay-2" data-project="3">
+      <div class="project-header" onclick="toggleProject(this)">
+        <div class="project-num">03</div>
+        <div class="project-title-area">
+          <h3>CNC-Machined Gearbox Housing</h3>
+          <div class="project-tagline">GD&T toleranced design through manufacturing on Haas CNC mill</div>
+        </div>
+        <div class="project-tags-inline">
+          <span class="tag-pill">SolidWorks</span>
+          <span class="tag-pill">GD&T</span>
+          <span class="tag-pill">CNC Milling</span>
+          <span class="tag-pill">Aluminum 6061</span>
+        </div>
+        <div class="project-toggle">+</div>
+      </div>
+      <div class="project-docs">
+        <div class="docs-grid">
+          <div class="doc-section">
+            <div class="doc-section-title">Overview</div>
+            <p>Designed a two-stage spur gearbox housing for a class manufacturing project. Created fully toleranced GD&T drawings, wrote G-code for a Haas VF-2 CNC mill, and machined the part from 6061 aluminum billet with three setups.</p>
+          </div>
+          <div class="doc-section">
+            <div class="doc-section-title">Technical Specs</div>
+            <ul class="doc-spec-list">
+              <li>Material <span>Aluminum 6061-T6</span></li>
+              <li>Gear Ratio <span>4:1 (two-stage)</span></li>
+              <li>Tolerance <span>±0.05mm on bore</span></li>
+              <li>Surface Finish <span>Ra 1.6 μm</span></li>
+              <li>Machine <span>Haas VF-2 CNC Mill</span></li>
+              <li>CAM <span>Fusion 360</span></li>
+            </ul>
+          </div>
+          <div class="doc-section">
+            <div class="doc-section-title">Outcomes & Learnings</div>
+            <div class="doc-outcomes">
+              <div class="outcome-item">Part met all GD&T callouts on first inspection</div>
+              <div class="outcome-item">Learned 3-setup fixturing strategy</div>
+              <div class="outcome-item">Applied ASME Y14.5 standards throughout drawing</div>
+              <div class="outcome-item">Received highest grade in manufacturing lab course</div>
+            </div>
+          </div>
+          <div class="doc-section">
+            <div class="doc-section-title">Links & Resources</div>
+            <div class="doc-links">
+              <a href="#" class="doc-link"><span class="doc-link-icon">◈</span> SolidWorks CAD File</a>
+              <a href="#" class="doc-link"><span class="doc-link-icon">↓</span> Engineering Drawing PDF</a>
+              <a href="#" class="doc-link"><span class="doc-link-icon">▶</span> Machining Process Video</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ADD MORE PROJECTS BELOW — Copy the block above ── -->
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SKILLS — Edit skill names and dot levels (1-5)
+     To change a level: count how many .dot.on divs
+     there are vs .dot (empty) divs
+═══════════════════════════════════════════════ -->
+<div id="skills" class="section-wrap">
+  <p class="section-label reveal">Skills</p>
+  <h2 class="reveal">What I know.</h2>
+  <p class="section-sub reveal">Tools, software, and methods I use regularly.</p>
+
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">⚙️</div>
+      <div class="skill-card-title">Mechanical Design</div>
+      <!-- ✏️ Edit skill names and dot counts -->
+      <div class="skill-entry">
+        <span class="skill-entry-name">SolidWorks</span>
+        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on-dim"></div></div>
+      </div>
+      <div class="skill-entry">
+        <span class="skill-entry-name">Fusion 360</span>
+        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
+      </div>
+      <div class="skill-entry">
+        <span class="skill-entry-name">GD&T / Tolerancing</span>
+        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on-dim"></div><div class="dot"></div></div>
+      </div>
+      <div class="skill-entry">
+        <span class="skill-entry-name">FEA (ANSYS)</span>
+        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+    </div>
+
+    <div class="skill-card reveal reveal-delay-1">
+      <div class="skill-card-icon">🤖</div>
+      <div class="skill-card-title">Robotics & Automation</div>
+      <div class="skill-entry">
+        <span class="skill-entry-name">ROS / ROS2</span>
+        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on-dim"></div><div class="dot"></div></div>
+      </div>
+      <div class="skill-entry">
+        <span class="skill-entry-name">Kinematics & Dynamics</span>
+        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
+      </div>
+      <div class="skill-entry">
+        <span class="skill-entry-name">PID / Control Systems</span>
+        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on-dim"></div><div class="dot"></div></div>
+      </div>
+      <div class="skill-entry">
+        <span class="skill-entry-name">Arduino / STM32</span>
+        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on-dim"></div></div>
+      </div>
+    </div>
+
+    <div class="skill-card reveal reveal-delay-2">
+      <div class="skill-card-icon">🔧</div>
+      <div class="skill-card-title">Fabrication</div>
+      <div class="skill-entry">
+        <span class="skill-entry-name">CNC Milling</span>
+        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on-dim"></div><div class="dot"></div></div>
+      </div>
+      <div class="skill-entry">
+        <span class="skill-entry-name">FDM 3D Printing</span>
+        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div>
+      </div>
+      <div class="skill-entry">
+        <span class="skill-entry-name">Laser Cutting</span>
+        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
+      </div>
+      <div class="skill-entry">
+        <span class="skill-entry-name">Welding (MIG)</span>
+        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on-dim"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     CONTACT — Edit email, LinkedIn, GitHub links
+═══════════════════════════════════════════════ -->
+<div id="contact" class="section-wrap">
+  <p class="section-label reveal">Contact</p>
+  <h2 class="reveal">Let's connect.</h2>
+  <p class="section-sub reveal">Open to internships, research roles, and project collaborations.</p>
+
+  <div class="contact-grid">
+    <div class="contact-intro reveal">
+      <!-- ✏️ Edit contact intro text -->
+      <p>I'm currently looking for summer internship opportunities in robotics, mechanical design, or automation engineering.</p>
+      <p>Whether you're working on something cool or just want to talk engineering — my inbox is open. Best reached at <a href="mailto:alex@example.com">alex@example.com</a>.</p>
+    </div>
+    <div class="contact-cards reveal reveal-delay-1">
+      <!-- ✏️ Edit href links for each card -->
+      <a href="mailto:alex@example.com" class="contact-card">
+        <div class="contact-card-left">
+          <div class="contact-card-icon">✉</div>
+          <div>
+            <div class="contact-card-label">Email</div>
+            <div class="contact-card-val">alex@example.com</div>
+          </div>
+        </div>
+        <span class="contact-card-arrow">↗</span>
+      </a>
+      <a href="https://linkedin.com/in/yourprofile" class="contact-card" target="_blank">
+        <div class="contact-card-left">
+          <div class="contact-card-icon">in</div>
+          <div>
+            <div class="contact-card-label">LinkedIn</div>
+            <div class="contact-card-val">linkedin.com/in/alexmorgan</div>
+          </div>
+        </div>
+        <span class="contact-card-arrow">↗</span>
+      </a>
+      <a href="https://github.com/yourprofile" class="contact-card" target="_blank">
+        <div class="contact-card-left">
+          <div class="contact-card-icon">⬡</div>
+          <div>
+            <div class="contact-card-label">GitHub</div>
+            <div class="contact-card-val">github.com/alexmorgan</div>
+          </div>
+        </div>
+        <span class="contact-card-arrow">↗</span>
+      </a>
+      <a href="#" class="contact-card">
+        <div class="contact-card-left">
+          <div class="contact-card-icon">↓</div>
+          <div>
+            <div class="contact-card-label">Résumé</div>
+            <div class="contact-card-val">Download PDF</div>
+          </div>
+        </div>
+        <span class="contact-card-arrow">↓</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>© 2026 Alex Morgan — Mechanical & Robotics Engineering</span>
+  <span>Tucker, Georgia · <a href="mailto:alex@example.com">alex@example.com</a></span>
+</footer>
+
+<script>
+  // ── Live clock in nav (optional — remove if not wanted)
+  // No clock in this version for cleaner look
+
+  // ── Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Trigger hero reveals on load
+  setTimeout(() => {
+    document.querySelectorAll('#hero .reveal').forEach((el, i) => {
+      setTimeout(() => el.classList.add('on'), i * 120);
+    });
+  }, 100);
+
+  // ── Project accordion toggle
+  function toggleProject(header) {
+    const item = header.closest('.project-item');
+    const isOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.project-item').forEach(p => p.classList.remove('open'));
+    // Open clicked if it wasn't already open
+    if (!isOpen) item.classList.add('open');
+  }
+</script>
+</body>
+</html>
