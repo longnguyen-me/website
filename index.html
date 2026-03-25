@@ -204,58 +204,115 @@ const ME = {
   name:"Long Nguyen", nameShort:"LONG",
   tagline:"Mechanical & Robotics Engineering Student",
   headline:["Building the","machines of","tomorrow."], accentWord:2,
+
   bio:[
     "I'm a Mechanical Engineering student specializing in robotics and automation systems. I'm drawn to the intersection of mechanical design, embedded control, and real-world fabrication.",
     "I've worked on projects ranging from robotic arm kinematics to precision CNC-machined components — always pushing to understand both the math and the metal. I care about designs that are elegant, functional, and manufacturable.",
     "Currently seeking internship opportunities where I can contribute to teams building intelligent mechanical systems."
   ],
+
   email:"long.nguyen.mech@gmail.com",
   linkedin:"linkedin.com/in/long-nguyen-a66ab1237",
   linkedinUrl:"https://www.linkedin.com/in/long-nguyen-a66ab1237/",
   github:"github.com/longnguyen-me",
   githubUrl:"https://github.com/longnguyen-me",
-  resumeUrl:"#", location:"Norcross, Georgia", photo:"",
-  degree:"B.S. Mechanical Engineering", university:"Kennesaw State University — SPCEET",
-  year:"Junior (3rd Year)", focus:"Robotics & Automation", status:"Open to Internships",
+  resumeUrl:"#",
+  location:"Norcross, Georgia",
+  photo:"",
+
+  degree:"B.S. Mechanical Engineering",
+  university:"Kennesaw State University — SPCEET",
+  year:"Junior (3rd Year)",
+  focus:"Robotics & Automation",
+  status:"Open to Internships",
+
   chips:[
-    {label:"Robotics",active:true},{label:"Automation",active:true},
-    {label:"CAD / SolidWorks",active:true},{label:"CNC Machining",active:true},
-    {label:"ROS",active:false},{label:"Embedded Systems",active:false},
-    {label:"FDM 3D Printing",active:false},{label:"Kinematics",active:false},
+    {label:"Robotics",active:true},
+    {label:"Automation",active:true},
+    {label:"CAD / SolidWorks",active:true},
+    {label:"CNC Machining",active:true},
+    {label:"ROS",active:false},
+    {label:"Embedded Systems",active:false},
+    {label:"FDM 3D Printing",active:false},
+    {label:"Kinematics",active:false},
   ],
+
   projects:[
-    {num:"01",title:"6-DOF Robotic Arm",tagline:"Design, simulation & fabrication of a desktop robotic manipulator",
-     tags:["SolidWorks","ROS","Arduino","3D Print"],
-     overview:"Designed and built a 6-degree-of-freedom desktop robotic arm capable of pick-and-place operations. Full pipeline from kinematic modeling in MATLAB, CAD in SolidWorks, to fabrication and control via ROS and Arduino Mega.",
-     specs:[["Reach","420 mm"],["Payload","250 g"],["DOF","6 (revolute joints)"],["Actuators","MG996R Servos"],["Controller","Arduino Mega + ROS"],["Material","PLA / PETG, Aluminum inserts"]],
-     outcomes:["Achieved ±2mm repeatability in pick-and-place task","Implemented forward & inverse kinematics from scratch","Integrated ROS MoveIt! for path planning","Presented at university engineering showcase"],
-     links:[{icon:"⬡",label:"GitHub Repository",url:"#"},{icon:"◈",label:"CAD Files (GrabCAD)",url:"#"},{icon:"▶",label:"Demo Video",url:"#"},{icon:"↓",label:"Project Report PDF",url:"#"}]},
-    {num:"02",title:"Autonomous Line-Following Robot",tagline:"PID-controlled differential drive bot with sensor array",
-     tags:["C++","PID Control","PCB Design","STM32"],
-     overview:"Built a differential drive robot with an 8-channel IR sensor array and custom PID controller for high-speed line following. Chassis designed in SolidWorks, custom PCB in EasyEDA, programmed in C++ on STM32.",
-     specs:[["Chassis","Custom laser-cut acrylic"],["MCU","STM32F103C8T6"],["Sensors","8x TCRT5000 IR"],["Drive","Differential (2x N20 motors)"],["Control","Tuned PID (Kp/Ki/Kd)"],["Top Speed","1.2 m/s on track"]],
-     outcomes:["2nd place in inter-university robotics competition","Tuned PID manually — learned systematic approach","Designed and ordered first custom PCB","Lap time reduced 40% after control tuning"],
-     links:[{icon:"⬡",label:"GitHub Repository",url:"#"},{icon:"◈",label:"PCB Schematic",url:"#"},{icon:"▶",label:"Competition Run Video",url:"#"}]},
-    {num:"03",title:"CNC-Machined Gearbox Housing",tagline:"GD&T toleranced design through manufacturing on Haas CNC mill",
-     tags:["SolidWorks","GD&T","CNC Milling","Aluminum 6061"],
-     overview:"Designed a two-stage spur gearbox housing for a class manufacturing project. Created fully toleranced GD&T drawings, wrote G-code for a Haas VF-2 CNC mill, and machined from 6061 aluminum billet with three setups.",
-     specs:[["Material","Aluminum 6061-T6"],["Gear Ratio","4:1 (two-stage)"],["Tolerance","±0.05mm on bore"],["Surface","Ra 1.6 μm"],["Machine","Haas VF-2 CNC Mill"],["CAM","Fusion 360"]],
-     outcomes:["Part met all GD&T callouts on first inspection","Learned 3-setup fixturing strategy","Applied ASME Y14.5 standards throughout drawing","Highest grade in manufacturing lab course"],
-     links:[{icon:"◈",label:"SolidWorks CAD File",url:"#"},{icon:"↓",label:"Engineering Drawing PDF",url:"#"},{icon:"▶",label:"Machining Process Video",url:"#"}]},
+    {
+      num:"01",
+      title:"3-DOF Robotic Arm",
+      tagline:"Design, simulation & fabrication of a desktop robotic manipulator",
+      tags:["SolidWorks","Arduino","3D Print"],
+      overview:"Designed and built a 3-DOF robotic arm capable of basic pick-and-place operations. Focused on kinematics, mechanical design, and system integration from CAD to physical build.",
+      specs:[],
+      outcomes:["N/A","N/A","N/A","N/A"],
+      links:[
+        {icon:"⬡",label:"GitHub Repository",url:"#"},
+        {icon:"◈",label:"CAD Files",url:"#"},
+        {icon:"▶",label:"Demo Video",url:"#"},
+        {icon:"↓",label:"Project Report",url:"#"}
+      ]
+    },
+
+    {
+      num:"02",
+      title:"N/A",
+      tagline:"N/A",
+      tags:[],
+      overview:"N/A",
+      specs:[],
+      outcomes:["N/A"],
+      links:[]
+    },
+
+    {
+      num:"03",
+      title:"N/A",
+      tagline:"N/A",
+      tags:[],
+      overview:"N/A",
+      specs:[],
+      outcomes:["N/A"],
+      links:[]
+    }
   ],
-  miniProjects:[
-    {cat:"Automation",title:"Conveyor Belt Sorter",desc:"Arduino-driven conveyor using color sensor to sort objects into bins.",tags:["Arduino","Color Sensor","3D Print"]},
-    {cat:"CAD",title:"Servo Bracket Library",desc:"Parametric SolidWorks library of 20+ servo mounting brackets for rapid prototyping.",tags:["SolidWorks","Parametric CAD"]},
-    {cat:"Embedded",title:"IMU Balancing Platform",desc:"Self-balancing 2-axis gimbal using MPU-6050 IMU and PID controllers on ESP32.",tags:["ESP32","IMU","PID","C++"]},
-    {cat:"Fabrication",title:"Modular Extrusion Frame",desc:"Reconfigurable test bench from 2020/4040 aluminum extrusions for lab experiments.",tags:["Mechanical Design","Aluminum"]},
-    {cat:"Robotics",title:"IK Simulator",desc:"Python simulation of a 3-DOF planar arm with real-time IK solving via Jacobian pseudo-inverse.",tags:["Python","Kinematics","Simulation"]},
-    {cat:"CAD",title:"Ergonomic Wrist Rest",desc:"Designed and FDM-printed a contoured wrist rest iterated across 4 design versions.",tags:["Fusion 360","FDM","Ergonomics"]},
-  ],
+
+  miniProjects:[],
+
   skills:[
-    {icon:"⚙️",title:"Mechanical Design",items:[{name:"SolidWorks",dots:5},{name:"Fusion 360",dots:4},{name:"GD&T / Tolerancing",dots:3},{name:"FEA (ANSYS)",dots:3}]},
-    {icon:"🤖",title:"Robotics & Automation",items:[{name:"ROS / ROS2",dots:3},{name:"Kinematics & Dynamics",dots:4},{name:"PID / Control Systems",dots:3},{name:"Arduino / STM32",dots:4}]},
-    {icon:"🔧",title:"Fabrication",items:[{name:"CNC Milling",dots:3},{name:"FDM 3D Printing",dots:5},{name:"Laser Cutting",dots:4},{name:"Welding (MIG)",dots:2}]},
-  ],
+    {
+      icon:"⚙️",
+      title:"Mechanical Design",
+      items:[
+        {name:"SolidWorks",dots:5},
+        {name:"Fusion 360",dots:4},
+        {name:"GD&T / Tolerancing",dots:3},
+        {name:"FEA (ANSYS)",dots:0}
+      ]
+    },
+
+    {
+      icon:"🤖",
+      title:"Robotics & Automation",
+      items:[
+        {name:"ROS / ROS2",dots:0},
+        {name:"Kinematics & Dynamics",dots:4},
+        {name:"PID / Control Systems",dots:0},
+        {name:"Arduino / STM32",dots:4}
+      ]
+    },
+
+    {
+      icon:"🔧",
+      title:"Fabrication",
+      items:[
+        {name:"3D Printing",dots:5},
+        {name:"CNC Milling",dots:0},
+        {name:"Laser Cutting",dots:0},
+        {name:"Welding (MIG)",dots:0}
+      ]
+    }
+  ]
 };
 </script>
 
