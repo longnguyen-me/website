@@ -357,126 +357,51 @@ const ME = {
      giving depth cues without rasterisation cost
 ═══════════════════════════════════════════════════════════════ */
 (function(){
-  var canvas = document.getElementById('wave-canvas');
-  var ctx    = canvas.getContext('2d');
+  var canvas = document.getElementById('orbital-canvas');
+  var ctx = canvas.getContext('2d');
   if(!ctx) return;
-
-  var W=0, H=0, ox=0, oy=0, R=0;
-
+  var W=0,H=0,ox=0,oy=0,R=0,rotX=0,rotY=0;
   function resize(){
-    var hero = document.getElementById('hero');
-    W = (hero ? hero.offsetWidth  : 0) || window.innerWidth;
-    H = (hero ? hero.offsetHeight : 0) || window.innerHeight;
-    canvas.width  = W; canvas.height = H;
-    canvas.style.width  = W+'px'; canvas.style.height = H+'px';
-    ox = W/2; oy = H/2;
-    R  = Math.max(W,H) * 0.80;
+    var hero=document.getElementById('hero');
+    W=(hero?hero.offsetWidth:0)||window.innerWidth;
+    H=(hero?hero.offsetHeight:0)||window.innerHeight;
+    canvas.width=W;canvas.height=H;
+    canvas.style.width=W+'px';canvas.style.height=H+'px';
+    ox=W/2;oy=H/2;R=Math.min(W,H)*0.36;
   }
-
-  var globalRY = 0, globalRX = 0;
-
-  function proj(theta, incl, lon){
-    var lx = R*Math.cos(theta), ly = R*Math.sin(theta);
-    var rx = lx, ry = ly*Math.cos(incl), rz = ly*Math.sin(incl);
-    var wx = rx*Math.cos(lon)+rz*Math.sin(lon), wy = ry, wz = -rx*Math.sin(lon)+rz*Math.cos(lon);
-    var ax = wx*Math.cos(globalRY)+wz*Math.sin(globalRY), ay = wy, az = -wx*Math.sin(globalRY)+wz*Math.cos(globalRY);
-    var bx = ax, by = ay*Math.cos(globalRX)-az*Math.sin(globalRX), bz = ay*Math.sin(globalRX)+az*Math.cos(globalRX);
-    var FOV = 1400, sc = Math.max(FOV/(FOV+bz*0.5), 0.05);
-    return {x:ox+bx*sc, y:oy+by*sc*0.88, z:bz, sc:sc};
+  var LAT=14,LON=22,edges=[];
+  for(var la=1;la<LAT;la++){
+    var phi=Math.PI*la/LAT,y=Math.cos(phi),r=Math.sin(phi),pts=[];
+    for(var lo=0;lo<=LON;lo++){var t=(Math.PI*2)*lo/LON;pts.push({x:r*Math.cos(t),y:y,z:r*Math.sin(t)});}
+    for(var i=0;i<pts.length-1;i++)edges.push({ax:pts[i].x,ay:pts[i].y,az:pts[i].z,bx:pts[i+1].x,by:pts[i+1].y,bz:pts[i+1].z});
   }
-
-  var CFG = [
-    { incl:0.00, lon:0.00, spd:420, col:[255,200, 60] },
-    { incl:0.52, lon:1.05, spd:510, col:[255,160, 35] },
-    { incl:1.05, lon:2.09, spd:380, col:[255,220, 90] },
-    { incl:1.57, lon:3.14, spd:560, col:[255,140, 25] },
-    { incl:2.09, lon:4.19, spd:450, col:[255,190, 55] },
-    { incl:2.62, lon:5.24, spd:490, col:[255,170, 45] },
-  ];
-
-  var TRAIL    = 180;
-  var SUBSTEPS = 120;
-  var particles = [];
-
-  function initParticles(){
-    particles = [];
-    for(var i=0; i<CFG.length; i++){
-      var c = CFG[i];
-      particles.push({
-        incl: c.incl, lon: c.lon, spd: c.spd, col: c.col,
-        theta: (Math.PI*2/CFG.length)*i,
-        trail: []
-      });
-    }
+  for(var lo=0;lo<LON;lo++){
+    var t=(Math.PI*2)*lo/LON,pts=[];
+    for(var la=0;la<=LAT;la++){var phi=Math.PI*la/LAT;pts.push({x:Math.sin(phi)*Math.cos(t),y:Math.cos(phi),z:Math.sin(phi)*Math.sin(t)});}
+    for(var i=0;i<pts.length-1;i++)edges.push({ax:pts[i].x,ay:pts[i].y,az:pts[i].z,bx:pts[i+1].x,by:pts[i+1].y,bz:pts[i+1].z});
   }
-
-  var lastT = 0;
-
+  function project(x,y,z){
+    var y2=y*Math.cos(rotX)-z*Math.sin(rotX),z2=y*Math.sin(rotX)+z*Math.cos(rotX);
+    var x3=x*Math.cos(rotY)+z2*Math.sin(rotY),y3=y2,z3=-x*Math.sin(rotY)+z2*Math.cos(rotY);
+    var sc=R*3.5/(3.5+z3);
+    return{sx:ox+x3*sc,sy:oy+y3*sc*0.92,z:z3};
+  }
+  var lastT=0;
   function frame(ts){
     requestAnimationFrame(frame);
-    var dt = Math.min((ts-lastT)*0.001, 0.05);
-    lastT = ts;
-
-    globalRY += dt * 0.18;
-    globalRX  = Math.sin(globalRY*0.31) * 0.40;
-
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = 'rgba(12,12,14,0.06)';
-    ctx.fillRect(0, 0, W, H);
-
-    for(var pi=0; pi<particles.length; pi++){
-      var p   = particles[pi];
-      var sub = dt / SUBSTEPS;
-      for(var s=0; s<SUBSTEPS; s++){
-        var boost = 1 + 8.0*Math.pow(Math.max(Math.cos(p.theta),0),4);
-        p.theta  += p.spd * boost * sub;
-        var pt = proj(p.theta, p.incl, p.lon);
-        p.trail.unshift({x:pt.x, y:pt.y, z:pt.z, sc:pt.sc});
-        if(p.trail.length > TRAIL) p.trail.pop();
-      }
+    var dt=Math.min((ts-lastT)*0.001,0.05);lastT=ts;
+    rotY+=dt*0.28;rotX=0.42+Math.sin(rotY*0.23)*0.25;
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<edges.length;i++){
+      var e=edges[i],pa=project(e.ax,e.ay,e.az),pb=project(e.bx,e.by,e.bz);
+      var t=((pa.z+pb.z)*0.5+1)*0.5;
+      ctx.strokeStyle='rgba(232,135,42,'+(0.06+t*0.42)+')';
+      ctx.lineWidth=0.4+t*0.7;
+      ctx.beginPath();ctx.moveTo(pa.sx,pa.sy);ctx.lineTo(pb.sx,pb.sy);ctx.stroke();
     }
-
-    var sorted = particles.slice().sort(function(a,b){
-      var az = a.trail.length ? a.trail[0].z : 0;
-      var bz = b.trail.length ? b.trail[0].z : 0;
-      return az - bz;
-    });
-
-    ctx.globalCompositeOperation = 'lighter';
-
-    for(var pi=0; pi<sorted.length; pi++){
-      var p = sorted[pi];
-      if(p.trail.length < 2) continue;
-      var cr=p.col[0], cg=p.col[1], cb=p.col[2];
-      var headZ  = p.trail[0].z;
-      var depthT = Math.max(0, Math.min((headZ+R)/(R*2), 1));
-      var bright = 0.15 + depthT*0.85;
-
-      for(var j=1; j<p.trail.length; j++){
-        var t0 = p.trail[j-1], t1 = p.trail[j];
-        var age       = 1 - j/p.trail.length;
-        var intensity = Math.pow(age, 0.42) * bright;
-        if(intensity < 0.003) break;
-        var lw = Math.max(intensity * 13 * t1.sc, 0.15);
-        ctx.strokeStyle = 'rgba('+cr+','+cg+','+cb+','+intensity+')';
-        ctx.lineWidth   = lw;
-        ctx.lineCap     = 'round';
-        ctx.beginPath();
-        ctx.moveTo(t0.x, t0.y);
-        ctx.lineTo(t1.x, t1.y);
-        ctx.stroke();
-      }
-    }
-
-    ctx.globalCompositeOperation = 'source-over';
   }
-
-  window.addEventListener('resize', function(){ resize(); initParticles(); }, {passive:true});
-  setTimeout(function(){
-    resize(); initParticles();
-    lastT = performance.now();
-    requestAnimationFrame(frame);
-  }, 50);
+  window.addEventListener('resize',resize,{passive:true});
+  setTimeout(function(){resize();lastT=performance.now();requestAnimationFrame(frame);},50);
 })();
 
 
