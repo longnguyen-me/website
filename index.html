@@ -52,6 +52,14 @@
     .nav-links a{padding:.4rem .9rem;font-size:.78rem;font-weight:400;letter-spacing:.05em;text-decoration:none;color:var(--text-muted);border-radius:var(--radius);transition:color .2s,background .2s;}
     .nav-links a:hover{color:var(--text);background:var(--surface-2);}
     .nav-links a.active{color:var(--accent);background:var(--accent-glow);}
+    
+    /* Hamburger menu - hidden on desktop */
+    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:8px;cursor:pointer;z-index:101;}
+    .hamburger span{display:block;width:24px;height:2px;background:var(--text);transition:all .3s ease;border-radius:2px;}
+    .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(7px,7px);}
+    .hamburger.active span:nth-child(2){opacity:0;}
+    .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(7px,-7px);}
+
 
     main{padding-top:72px;}
     .wrap{max-width:1160px;margin:0 auto;padding:0 2.5rem;}
@@ -182,9 +190,35 @@
     
     /* Tablet and below (900px) */
     @media(max-width:900px){
+      /* Mobile Navigation - Hamburger Menu */
+      .hamburger{display:flex;}
       nav{padding:1rem 1.5rem;}
-      .nav-links{gap:.1rem;}
-      .nav-links a{padding:.4rem .7rem;font-size:.75rem;}
+      .nav-links{
+        position:fixed;
+        top:65px;
+        left:0;
+        right:0;
+        flex-direction:column;
+        gap:0;
+        background:rgba(12,12,14,0.98);
+        backdrop-filter:blur(24px);
+        border-bottom:1px solid var(--border);
+        padding:0;
+        max-height:0;
+        overflow:hidden;
+        transition:max-height .3s ease;
+      }
+      .nav-links.active{max-height:400px;}
+      .nav-links a{
+        width:100%;
+        padding:1rem 1.5rem;
+        border-radius:0;
+        border-bottom:1px solid var(--border);
+        text-align:left;
+        font-size:.85rem;
+      }
+      .nav-links a:last-child{border-bottom:none;}
+      
       .wrap{padding:0 1.5rem;}
       #hero{padding:4rem 1.5rem;min-height:90vh;}
       .hero-inner{grid-template-columns:1fr;gap:2rem;}
@@ -192,7 +226,30 @@
       .hero-actions{gap:.7rem;}
       .btn-primary,.btn-secondary{padding:.7rem 1.5rem;font-size:.8rem;}
       .about-grid,.contact-grid{grid-template-columns:1fr;gap:2rem;}
-      .about-photo-frame{width:100%;height:220px;}
+      
+      /* Fix photo aspect ratio on mobile */
+      .about-photo-frame{
+        width:100%;
+        height:0;
+        padding-bottom:75%; /* 4:3 aspect ratio for landscape photos */
+        position:relative;
+      }
+      .about-photo-frame img{
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        object-fit:cover;
+      }
+      .about-photo-placeholder{
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+      }
+      
       .about-photo-accent{width:100%;}
       .about-card{margin-top:1rem;}
       .skills-grid{grid-template-columns:1fr;}
@@ -395,7 +452,12 @@ const ME = {
 
 <nav>
   <a class="nav-logo" href="#hero" id="nav-logo-el"></a>
-  <div class="nav-links">
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="nav-links" id="nav-links">
     <a href="#about"    onclick="navTo('about',event)">About</a>
     <a href="#projects" onclick="navTo('projects',event)">Projects</a>
     <a href="#skills"   onclick="navTo('skills',event)">Skills</a>
@@ -734,6 +796,24 @@ document.getElementById('contact-cards').innerHTML=`
 document.getElementById('footer-el').innerHTML=`<span>© 2026 ${ME.name} — Mechanical & Robotics Engineering</span><span>${ME.location} · <a href="mailto:${ME.email}">${ME.email}</a></span>`;
 
 function toggleProj(hdr){const item=hdr.closest('.proj-item');const open=item.classList.contains('open');document.querySelectorAll('.proj-item').forEach(p=>p.classList.remove('open'));if(!open)item.classList.add('open');}
+
+/* ── HAMBURGER MENU TOGGLE ── */
+function toggleMenu(){
+  const hamburger=document.getElementById('hamburger');
+  const navLinks=document.getElementById('nav-links');
+  hamburger.classList.toggle('active');
+  navLinks.classList.toggle('active');
+}
+
+/* Close menu when clicking a nav link on mobile */
+document.querySelectorAll('.nav-links a').forEach(link=>{
+  link.addEventListener('click',()=>{
+    if(window.innerWidth<=900){
+      document.getElementById('hamburger').classList.remove('active');
+      document.getElementById('nav-links').classList.remove('active');
+    }
+  });
+});
 
 /* ── NAV SMOOTH SCROLL ── */
 function navTo(id, e){
