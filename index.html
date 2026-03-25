@@ -43,6 +43,8 @@
     #about, #projects, #skills, #contact { scroll-margin-top: 80px; }
     nav,main,footer{position:relative;z-index:2;}
 
+
+
     nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1rem 3rem;background:rgba(12,12,14,0.82);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
     .nav-logo{font-family:var(--font-display);font-weight:800;font-size:1rem;letter-spacing:.04em;text-decoration:none;color:var(--text);}
     .nav-logo span{color:var(--accent);}
@@ -148,13 +150,9 @@
     .skill-card:hover{border-color:var(--border-light);}
     .skill-icon{font-size:1.4rem;margin-bottom:.9rem;}
     .skill-title{font-family:var(--font-display);font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:1.2rem;}
-    .skill-row{display:flex;justify-content:space-between;align-items:center;padding:.55rem 0;border-bottom:1px solid var(--border);font-size:.79rem;}
-    .skill-row:last-child{border-bottom:none;}
-    .sname{color:var(--text-dim);}
-    .dots{display:flex;gap:3px;}
-    .d{width:7px;height:7px;border-radius:50%;background:var(--border-light);}
-    .d.on{background:var(--accent);}
-    .d.lo{background:var(--accent-dim);}
+    .skill-list{list-style:none;}
+    .skill-list li{padding:.55rem 0;border-bottom:1px solid var(--border);font-size:.79rem;color:var(--text-dim);}
+    .skill-list li:last-child{border-bottom:none;}
 
     .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
     .contact-text p{color:var(--text-dim);font-size:.93rem;line-height:1.9;margin-bottom:.9rem;}
@@ -200,8 +198,51 @@
 <body>
 
 <script>
+/* ═══════════════════════════════════════════════════════════════════════
+   PORTFOLIO CONFIGURATION
+   ═══════════════════════════════════════════════════════════════════════
+   
+   HOW TO ADD/EDIT PROJECTS:
+   
+   1. MAJOR PROJECTS (projects array):
+      - Scroll down to the 'projects' array
+      - Copy an existing project object and modify it
+      - Each project needs: num, title, tagline, tags[], overview, specs[], outcomes[], links[]
+      
+   2. SIDE PROJECTS (miniProjects array):
+      - These are currently empty - add them in mini.html instead
+      
+   3. SKILLS (skills array):
+      - Each skill card has: icon (emoji), title, items[] (list of skill names)
+      - Just add/remove items in the items array
+      
+   EXAMPLE PROJECT:
+   {
+     num:"01",
+     title:"My Awesome Robot",
+     tagline:"A brief one-line description",
+     tags:["Arduino","3D Print","Python"],
+     overview:"Detailed description of what this project is about...",
+     specs:[
+       ["Weight","2.5 kg"],
+       ["Speed","1.2 m/s"],
+       ["Battery","12V LiPo"]
+     ],
+     outcomes:[
+       "What I learned",
+       "What I achieved",
+       "Competition results"
+     ],
+     links:[
+       {icon:"⬡",label:"GitHub",url:"https://github.com/..."},
+       {icon:"▶",label:"Demo Video",url:"https://youtube.com/..."}
+     ]
+   }
+   
+   ═══════════════════════════════════════════════════════════════════════ */
+
 const ME = {
-  name:"Long Nguyen", nameShort:"LONG",
+  name:"Long Nguyen", nameShort:"LONG.PORTFOLIO",
   tagline:"Mechanical Engineering Student",
   headline:["Building the","machines of","tomorrow."], accentWord:2,
 
@@ -226,16 +267,7 @@ const ME = {
   focus:"Robotics & Automation",
   status:"Open to Internships",
 
-  chips:[
-    {label:"Robotics",active:true},
-    {label:"Automation",active:true},
-    {label:"CAD / SolidWorks",active:true},
-    {label:"CNC Machining",active:true},
-    {label:"ROS",active:false},
-    {label:"Embedded Systems",active:false},
-    {label:"FDM 3D Printing",active:false},
-    {label:"Kinematics",active:false},
-  ],
+  chips:[],
 
   projects:[
     {
@@ -283,34 +315,19 @@ const ME = {
     {
       icon:"⚙️",
       title:"Mechanical Design",
-      items:[
-        {name:"SolidWorks",dots:5},
-        {name:"Fusion 360",dots:4},
-        {name:"GD&T / Tolerancing",dots:3},
-        {name:"FEA (ANSYS)",dots:0}
-      ]
+      items:["SolidWorks","Fusion 360","GD&T / Tolerancing","FEA (ANSYS)"]
     },
 
     {
       icon:"🤖",
       title:"Robotics & Automation",
-      items:[
-        {name:"ROS / ROS2",dots:0},
-        {name:"Kinematics & Dynamics",dots:4},
-        {name:"PID / Control Systems",dots:0},
-        {name:"Arduino / STM32",dots:4}
-      ]
+      items:["ROS / ROS2","Kinematics & Dynamics","PID / Control Systems","Arduino / STM32"]
     },
 
     {
       icon:"🔧",
       title:"Fabrication",
-      items:[
-        {name:"3D Printing",dots:5},
-        {name:"CNC Milling",dots:0},
-        {name:"Laser Cutting",dots:0},
-        {name:"Welding (MIG)",dots:0}
-      ]
+      items:["3D Printing","CNC Milling","Laser Cutting","Welding (MIG)"]
     }
   ]
 };
@@ -324,9 +341,9 @@ const ME = {
   <div class="nav-links">
     <a href="#about"    onclick="navTo('about',event)">About</a>
     <a href="#projects" onclick="navTo('projects',event)">Projects</a>
-    <a href="mini.html">All Projects</a>
     <a href="#skills"   onclick="navTo('skills',event)">Skills</a>
     <a href="#contact"  onclick="navTo('contact',event)">Contact</a>
+    <a href="mini.html">All Projects</a>
   </div>
 </nav>
 
@@ -341,7 +358,7 @@ const ME = {
       <p class="hero-desc rv rv2" id="hero-desc"></p>
       <div class="hero-actions rv rv2">
         <a href="#projects" class="btn-primary">View Projects ↓</a>
-        <a id="hero-contact-btn" href="#" class="btn-secondary">Get in Touch</a>
+        <a href="#contact" class="btn-secondary">Get in Touch</a>
       </div>
     </div>
     <div class="hero-photo-wrap rv rv2" style="display:none">
@@ -582,7 +599,6 @@ const ME = {
 
 /* ── RENDER DOM ── */
 function mkEl(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!==undefined)e.innerHTML=html;return e;}
-function mkDots(n){let s='';for(let i=0;i<5;i++)s+=`<div class="d${i<n?(i<n-1?' on':' lo'):''}"></div>`;return`<div class="dots">${s}</div>`;}
 
 document.getElementById('nav-logo-el').innerHTML=`${ME.nameShort}<span>.</span>`;
 document.title=`${ME.name} — Portfolio`;
@@ -595,7 +611,6 @@ ME.headline.forEach((line,i)=>{
   if(i<ME.headline.length-1)h1el.appendChild(document.createElement('br'));
 });
 document.getElementById('hero-desc').textContent=ME.bio[0];
-document.getElementById('hero-contact-btn').href=`mailto:${ME.email}`;
 
 /* Photo in About section */
 const apf=document.getElementById('about-photo-frame');
@@ -608,9 +623,6 @@ apf.innerHTML=ME.photo
 
 const bioEl=document.getElementById('about-bio');
 ME.bio.forEach(p=>bioEl.appendChild(mkEl('p','',p)));
-const chipsDiv=mkEl('div','chips');
-ME.chips.forEach(c=>chipsDiv.appendChild(mkEl('span',`chip${c.active?' hi':''}`,c.label)));
-bioEl.appendChild(chipsDiv);
 
 document.getElementById('about-card').innerHTML=`<div class="card-title">Quick Specs</div>
   <div class="spec-row"><span class="sk">Degree</span><span class="sv">${ME.degree}</span></div>
@@ -618,7 +630,6 @@ document.getElementById('about-card').innerHTML=`<div class="card-title">Quick S
   <div class="spec-row"><span class="sk">Year</span><span class="sv">${ME.year}</span></div>
   <div class="spec-row"><span class="sk">Focus</span><span class="sv">${ME.focus}</span></div>
   <div class="spec-row"><span class="sk">Location</span><span class="sv">${ME.location}</span></div>
-  <div class="spec-row"><span class="sk">Email</span><span class="sv"><a href="mailto:${ME.email}" style="color:var(--accent);text-decoration:none">${ME.email}</a></span></div>
   <div class="spec-row"><span class="sk">Status</span><span class="sv"><span class="badge-green">${ME.status}</span></span></div>`;
 
 const projList=document.getElementById('proj-list');
@@ -649,14 +660,13 @@ document.getElementById('mini-teaser-desc').textContent=`${ME.miniProjects.lengt
 
 const sg=document.getElementById('skills-grid');
 ME.skills.forEach((s,i)=>{
-  const rows=s.items.map(r=>`<div class="skill-row"><span class="sname">${r.name}</span>${mkDots(r.dots)}</div>`).join('');
-  sg.appendChild(mkEl('div',`skill-card rv rv${i}`,`<div class="skill-icon">${s.icon}</div><div class="skill-title">${s.title}</div>${rows}`));
+  const rows=s.items.map(name=>`<li>${name}</li>`).join('');
+  sg.appendChild(mkEl('div',`skill-card rv rv${i}`,`<div class="skill-icon">${s.icon}</div><div class="skill-title">${s.title}</div><ul class="skill-list">${rows}</ul>`));
 });
 
 document.getElementById('contact-text').innerHTML=`
   <p>I'm currently looking for internship opportunities in robotics, mechanical design, or automation engineering.</p>
-  <p>Whether you're working on something cool or just want to talk engineering — my inbox is open. Best reached at <a href="mailto:${ME.email}">${ME.email}</a>.</p>
-  <p>Based in ${ME.location}.</p>`;
+  <p>Whether you're working on something cool or just want to talk engineering — my inbox is open.</p>`;
 
 document.getElementById('contact-cards').innerHTML=`
   <a href="mailto:${ME.email}" class="ccard"><div class="ccard-left"><div class="ccard-icon">✉</div><div><div class="ccard-lbl">Email</div><div class="ccard-val">${ME.email}</div></div></div><span class="ccard-arrow">↗</span></a>
