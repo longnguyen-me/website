@@ -27,6 +27,14 @@
     .nav-links a:hover{color:var(--text);background:var(--surface-2);}
     .nav-back{border:1px solid var(--accent-dim)!important;color:var(--accent)!important;}
     .nav-back:hover{background:var(--accent-glow)!important;}
+    
+    /* Hamburger menu */
+    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:8px;cursor:pointer;z-index:101;}
+    .hamburger span{display:block;width:24px;height:2px;background:var(--text);transition:all .3s ease;border-radius:2px;}
+    .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(7px,7px);}
+    .hamburger.active span:nth-child(2){opacity:0;}
+    .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(7px,-7px);}
+
     main{padding-top:72px;}
     .wrap{max-width:1160px;margin:0 auto;padding:0 2.5rem;}
     .page-header{padding:4rem 0 2.5rem;border-bottom:1px solid var(--border);}
@@ -97,9 +105,35 @@
     
     /* Tablet and below (900px) */
     @media(max-width:900px){
+      /* Mobile Navigation - Hamburger Menu */
+      .hamburger{display:flex;}
       nav{padding:1rem 1.5rem;}
-      .nav-links{gap:.1rem;}
-      .nav-links a{padding:.4rem .7rem;font-size:.75rem;}
+      .nav-links{
+        position:fixed;
+        top:65px;
+        left:0;
+        right:0;
+        flex-direction:column;
+        gap:0;
+        background:rgba(12,12,14,0.98);
+        backdrop-filter:blur(24px);
+        border-bottom:1px solid var(--border);
+        padding:0;
+        max-height:0;
+        overflow:hidden;
+        transition:max-height .3s ease;
+      }
+      .nav-links.active{max-height:400px;}
+      .nav-links a{
+        width:100%;
+        padding:1rem 1.5rem;
+        border-radius:0;
+        border-bottom:1px solid var(--border);
+        text-align:left;
+        font-size:.85rem;
+      }
+      .nav-links a:last-child{border-bottom:none;}
+      
       .wrap{padding:0 1.5rem;}
       .page-header{padding:3rem 0 2rem;}
       .page-header h1{font-size:clamp(2rem,7vw,3rem)!important;}
@@ -247,7 +281,12 @@ const ME = {
 
 <nav>
   <a class="nav-logo" href="index.html" id="nav-logo-el"></a>
-  <div class="nav-links">
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="nav-links" id="nav-links">
     <a href="index.html#about">About</a>
     <a href="index.html#projects">Portfolio</a>
     <a href="index.html#skills">Skills</a>
@@ -483,6 +522,25 @@ ME.miniProjects.forEach(m=>{
 
 function switchTab(id,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById('panel-'+id).classList.add('active');}
 function toggleProj(hdr){const item=hdr.closest('.proj-item');const open=item.classList.contains('open');document.querySelectorAll('.proj-item').forEach(p=>p.classList.remove('open'));if(!open)item.classList.add('open');}
+
+/* ── HAMBURGER MENU TOGGLE ── */
+function toggleMenu(){
+  const hamburger=document.getElementById('hamburger');
+  const navLinks=document.getElementById('nav-links');
+  hamburger.classList.toggle('active');
+  navLinks.classList.toggle('active');
+}
+
+/* Close menu when clicking a nav link on mobile */
+document.querySelectorAll('.nav-links a').forEach(link=>{
+  link.addEventListener('click',()=>{
+    if(window.innerWidth<=900){
+      document.getElementById('hamburger').classList.remove('active');
+      document.getElementById('nav-links').classList.remove('active');
+    }
+  });
+});
+
 const obs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});},{threshold:.07});
 document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 setTimeout(()=>document.querySelector('.page-header')?.classList.add('on'),100);
