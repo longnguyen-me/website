@@ -3,894 +3,501 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Portfolio — Mechanical Engineering Student</title>
+  <title>Long Nguyen — Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    /* ============================================================
-       EASY CUSTOMIZATION ZONE — change these variables to restyle
-       the entire site instantly
-    ============================================================ */
     :root {
-      --accent:       #e8872a;       /* main amber/orange accent */
-      --accent-dim:   #9b5a18;       /* dimmer version */
-      --accent-glow:  rgba(232,135,42,0.15);
-      --bg:           #0c0c0e;       /* page background */
-      --surface:      #131316;       /* card/section surface */
-      --surface-2:    #1a1a1f;       /* elevated surface */
-      --border:       #222228;       /* subtle borders */
-      --border-light: #2e2e38;       /* lighter borders */
-      --text:         #e8e6e0;       /* primary text */
-      --text-muted:   #6b6a72;       /* muted text */
-      --text-dim:     #9998a3;       /* mid text */
-      --font-display: 'Syne', sans-serif;
-      --font-body:    'Inter', sans-serif;
-      --radius:       6px;
-      --radius-lg:    12px;
+      --accent:#e8872a; --accent-dim:#9b5a18; --accent-glow:rgba(232,135,42,0.13);
+      --bg:#0c0c0e; --surface:#131316; --surface-2:#1a1a1f;
+      --border:#222228; --border-light:#2e2e38;
+      --text:#e8e6e0; --text-muted:#6b6a72; --text-dim:#9998a3;
+      --radius:6px; --radius-lg:12px;
+      --font-display:'Syne',sans-serif; --font-body:'Inter',sans-serif;
     }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-weight:300;line-height:1.7;overflow-x:hidden;cursor:none;}
+    ::-webkit-scrollbar{width:4px;}
+    ::-webkit-scrollbar-track{background:var(--bg);}
+    ::-webkit-scrollbar-thumb{background:var(--accent-dim);border-radius:2px;}
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; font-size: 16px; }
+    #cursor{position:fixed;z-index:9999;pointer-events:none;width:10px;height:10px;border-radius:50%;background:var(--accent);mix-blend-mode:screen;transform:translate(-50%,-50%);transition:width .2s,height .2s;}
+    #cursor-ring{position:fixed;z-index:9998;pointer-events:none;width:32px;height:32px;border-radius:50%;border:1px solid rgba(232,135,42,0.4);transform:translate(-50%,-50%);}
+    a,button{cursor:none;}
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
-      font-weight: 300;
-      line-height: 1.7;
-      overflow-x: hidden;
+    /* wave canvas lives absolutely inside #hero — clipped naturally when scrolled past */
+    #hero{min-height:100vh;display:flex;align-items:center;padding:6rem 2.5rem;max-width:100%;margin:0;
+      position:relative; overflow:hidden;}
+    /* inner content sits above canvas */
+    #hero .hero-inner{position:relative;z-index:1;max-width:1160px;margin:0 auto;width:100%;}
+    #wave-canvas{position:absolute;top:0;left:0;pointer-events:none;z-index:0;display:block;}
+    #vignette{position:absolute;inset:0;z-index:0;pointer-events:none;}
+    /* bottom fade so mesh dissolves at hero boundary */
+    #hero::after{
+      content:'';position:absolute;bottom:0;left:0;right:0;
+      height:35%;z-index:1;pointer-events:none;
+      background:linear-gradient(to bottom,transparent 0%,rgba(12,12,14,0.6) 50%,#0c0c0e 100%);
     }
+    /* scroll offset so fixed nav doesn't cover section headings */
+    #about, #projects, #skills, #contact { scroll-margin-top: 80px; }
+    nav,main,footer{position:relative;z-index:2;}
 
-    /* Subtle grid texture */
-    body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1rem 3rem;background:rgba(12,12,14,0.82);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-family:var(--font-display);font-weight:800;font-size:1rem;letter-spacing:.04em;text-decoration:none;color:var(--text);}
+    .nav-logo span{color:var(--accent);}
+    .nav-links{display:flex;gap:.2rem;align-items:center;}
+    .nav-links a{padding:.4rem .9rem;font-size:.78rem;font-weight:400;letter-spacing:.05em;text-decoration:none;color:var(--text-muted);border-radius:var(--radius);transition:color .2s,background .2s;}
+    .nav-links a:hover{color:var(--text);background:var(--surface-2);}
+    .nav-links a.active{color:var(--accent);background:var(--accent-glow);}
 
-    * { position: relative; z-index: 1; }
+    main{padding-top:72px;}
+    .wrap{max-width:1160px;margin:0 auto;padding:0 2.5rem;}
 
-    /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--accent-dim); border-radius: 2px; }
+    .hero-inner{display:grid;grid-template-columns:1fr auto;gap:5rem;align-items:center;width:100%;}
+    .hero-eyebrow{display:inline-flex;align-items:center;gap:.6rem;font-size:.73rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:1.8rem;}
+    .hero-eyebrow::before{content:'';width:24px;height:1.5px;background:var(--accent);}
+    h1{font-family:var(--font-display);font-weight:800;font-size:clamp(2.8rem,6vw,5.8rem);line-height:1;letter-spacing:-.03em;margin-bottom:1.6rem;}
+    h1 .muted{color:var(--text-muted);}
+    h1 .hi{color:var(--accent);}
+    .hero-desc{font-size:1rem;color:var(--text-dim);max-width:480px;line-height:1.85;margin-bottom:2.5rem;}
+    .hero-actions{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:3.5rem;}
+    .btn-primary{padding:.8rem 1.8rem;border-radius:var(--radius);background:var(--accent);color:#000;font-size:.82rem;font-weight:500;letter-spacing:.04em;text-decoration:none;transition:background .2s,transform .15s;display:inline-flex;align-items:center;gap:.4rem;}
+    .btn-primary:hover{background:#f09540;transform:translateY(-1px);}
+    .btn-secondary{padding:.8rem 1.8rem;border-radius:var(--radius);background:transparent;color:var(--text-dim);border:1px solid var(--border-light);font-size:.82rem;font-weight:400;letter-spacing:.04em;text-decoration:none;transition:border-color .2s,color .2s,transform .15s;display:inline-flex;align-items:center;gap:.4rem;}
+    .btn-secondary:hover{border-color:var(--accent-dim);color:var(--text);transform:translateY(-1px);}
 
-    /* ── NAV ── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1rem 3rem;
-      background: rgba(12,12,14,0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-logo {
-      font-family: var(--font-display);
-      font-weight: 800; font-size: 1rem;
-      letter-spacing: 0.04em; text-decoration: none;
-      color: var(--text);
-    }
-    .nav-logo span { color: var(--accent); }
-    .nav-links { display: flex; gap: 0.25rem; align-items: center; }
-    .nav-links a {
-      padding: 0.4rem 0.9rem;
-      font-size: 0.78rem; font-weight: 400; letter-spacing: 0.06em;
-      text-decoration: none; color: var(--text-muted);
-      border-radius: var(--radius);
-      transition: color 0.2s, background 0.2s;
-    }
-    .nav-links a:hover { color: var(--text); background: var(--surface-2); }
-    .nav-cta {
-      padding: 0.45rem 1.1rem !important;
-      background: var(--accent) !important;
-      color: #000 !important; font-weight: 500 !important;
-      border-radius: var(--radius) !important;
-    }
-    .nav-cta:hover { background: #f09540 !important; color: #000 !important; }
+    .hero-photo-wrap{width:260px;flex-shrink:0;}
+    .photo-frame{width:260px;height:320px;border-radius:var(--radius-lg);border:1px solid var(--border-light);overflow:hidden;background:var(--surface);}
+    .photo-frame img{width:100%;height:100%;object-fit:cover;display:block;}
+    .photo-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.8rem;color:var(--text-muted);}
+    .photo-placeholder-icon{font-size:3rem;opacity:.3;}
+    .photo-placeholder-text{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;opacity:.5;text-align:center;line-height:1.6;}
+    .photo-accent-bar{height:3px;width:100%;margin-top:.8rem;background:linear-gradient(90deg,var(--accent),transparent);}
 
-    /* ── HERO ── */
-    #hero {
-      min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: center;
-      padding: 8rem 3rem 5rem;
-      max-width: 1200px; margin: 0 auto;
-    }
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 0.6rem;
-      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--accent);
-      margin-bottom: 2rem;
-    }
-    .hero-eyebrow::before {
-      content: ''; display: block;
-      width: 28px; height: 1.5px; background: var(--accent);
-    }
-    h1 {
-      font-family: var(--font-display);
-      font-size: clamp(3rem, 7vw, 6.5rem);
-      font-weight: 800; line-height: 1;
-      letter-spacing: -0.03em;
-      margin-bottom: 1.8rem;
-    }
-    h1 .line2 { color: var(--text-muted); }
-    h1 .accent-word { color: var(--accent); }
-    .hero-desc {
-      font-size: 1.05rem; color: var(--text-dim); font-weight: 300;
-      max-width: 520px; line-height: 1.8; margin-bottom: 3rem;
-    }
-    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 5rem; }
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.85rem 2rem; border-radius: var(--radius);
-      background: var(--accent); color: #000;
-      font-family: var(--font-body); font-size: 0.85rem; font-weight: 500;
-      text-decoration: none; letter-spacing: 0.04em;
-      transition: background 0.2s, transform 0.15s;
-    }
-    .btn-primary:hover { background: #f09540; transform: translateY(-1px); }
-    .btn-secondary {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.85rem 2rem; border-radius: var(--radius);
-      background: transparent; color: var(--text-dim);
-      border: 1px solid var(--border-light);
-      font-family: var(--font-body); font-size: 0.85rem; font-weight: 400;
-      text-decoration: none; letter-spacing: 0.04em;
-      transition: border-color 0.2s, color 0.2s, transform 0.15s;
-    }
-    .btn-secondary:hover { border-color: var(--accent-dim); color: var(--text); transform: translateY(-1px); }
+    .sec{padding:6rem 0;border-top:1px solid var(--border);}
+    .sec-label{display:inline-flex;align-items:center;gap:.6rem;font-size:.7rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:.8rem;}
+    .sec-label::before{content:'';width:18px;height:1.5px;background:var(--accent);}
+    h2{font-family:var(--font-display);font-weight:800;font-size:clamp(1.7rem,3vw,2.4rem);letter-spacing:-.02em;margin-bottom:.6rem;line-height:1.1;}
+    .sec-sub{color:var(--text-muted);font-size:.88rem;margin-bottom:3rem;max-width:440px;}
 
-    .hero-stats {
-      display: flex; gap: 3rem; padding-top: 2.5rem;
-      border-top: 1px solid var(--border);
-    }
-    .hero-stat-val {
-      font-family: var(--font-display);
-      font-size: 2rem; font-weight: 800; color: var(--accent);
-      line-height: 1;
-    }
-    .hero-stat-label {
-      font-size: 0.72rem; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.3rem;
-    }
+    .about-grid{display:grid;grid-template-columns:220px 1fr 280px;gap:3rem;align-items:start;}
+    /* about photo column */
+    .about-photo{flex-shrink:0;}
+    .about-photo-frame{width:220px;height:270px;border-radius:var(--radius-lg);border:1px solid var(--border-light);overflow:hidden;background:var(--surface);}
+    .about-photo-frame img{width:100%;height:100%;object-fit:cover;display:block;}
+    .about-photo-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem;color:var(--text-muted);}
+    .about-photo-placeholder-icon{font-size:2.5rem;opacity:.25;}
+    .about-photo-placeholder-text{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;opacity:.4;text-align:center;line-height:1.6;}
+    .about-photo-accent{height:3px;width:220px;margin-top:.6rem;background:linear-gradient(90deg,var(--accent),transparent);}
+    .about-text p{color:var(--text-dim);line-height:1.9;margin-bottom:1rem;font-size:.93rem;}
+    .about-text p:first-child{color:var(--text);font-size:.98rem;}
+    .chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:1.6rem;}
+    .chip{padding:.35rem .9rem;border-radius:99px;font-size:.72rem;font-weight:500;background:var(--surface-2);border:1px solid var(--border-light);color:var(--text-muted);}
+    .chip.hi{background:var(--accent-glow);border-color:var(--accent-dim);color:var(--accent);}
+    .about-card{background:var(--surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:1.6rem;}
+    .card-title{font-size:.68rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:1.2rem;padding-bottom:.9rem;border-bottom:1px solid var(--border);}
+    .spec-row{display:flex;justify-content:space-between;align-items:baseline;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:.8rem;}
+    .spec-row:last-child{border-bottom:none;}
+    .sk{color:var(--text-muted);} .sv{color:var(--text);text-align:right;}
+    .badge-green{display:inline-flex;align-items:center;gap:.4rem;font-size:.72rem;color:#4caf7d;}
+    .badge-green::before{content:'';width:6px;height:6px;border-radius:50%;background:#4caf7d;box-shadow:0 0 6px #4caf7d;animation:pulse 2s ease-in-out infinite;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-    /* ── SECTION WRAPPER ── */
-    .section-wrap {
-      max-width: 1200px; margin: 0 auto;
-      padding: 6rem 3rem;
-      border-top: 1px solid var(--border);
-    }
-    .section-label {
-      display: inline-flex; align-items: center; gap: 0.6rem;
-      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em;
-      text-transform: uppercase; color: var(--accent);
-      margin-bottom: 1rem;
-    }
-    .section-label::before {
-      content: ''; display: block;
-      width: 20px; height: 1.5px; background: var(--accent);
-    }
-    h2 {
-      font-family: var(--font-display);
-      font-size: clamp(1.8rem, 3vw, 2.6rem);
-      font-weight: 800; letter-spacing: -0.02em;
-      margin-bottom: 0.8rem; line-height: 1.1;
-    }
-    .section-sub {
-      color: var(--text-muted); font-size: 0.9rem;
-      max-width: 480px; margin-bottom: 3.5rem;
-    }
+    .proj-list{display:flex;flex-direction:column;gap:2px;}
+    .proj-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:border-color .2s;}
+    .proj-item:hover{border-color:var(--border-light);}
+    .proj-item.open{border-color:var(--accent-dim);}
+    .proj-hdr{display:grid;grid-template-columns:46px 1fr auto auto;align-items:center;gap:1.4rem;padding:1.3rem 1.6rem;cursor:none;}
+    .proj-num{font-family:var(--font-display);font-size:.68rem;font-weight:700;color:var(--accent-dim);letter-spacing:.1em;text-align:center;}
+    .proj-hdr h3{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text);margin-bottom:.15rem;}
+    .proj-tagline{font-size:.75rem;color:var(--text-muted);}
+    .tag-row{display:flex;gap:.35rem;flex-wrap:wrap;}
+    .tpill{padding:.2rem .65rem;border-radius:99px;font-size:.65rem;font-weight:500;background:var(--surface-2);border:1px solid var(--border-light);color:var(--text-muted);}
+    .proj-toggle{width:26px;height:26px;border-radius:50%;background:var(--surface-2);border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:1.1rem;flex-shrink:0;transition:background .2s,transform .3s,color .2s;}
+    .proj-item.open .proj-toggle{background:var(--accent-glow);border-color:var(--accent-dim);color:var(--accent);transform:rotate(45deg);}
+    .proj-docs{display:none;border-top:1px solid var(--border);}
+    .proj-item.open .proj-docs{display:block;}
+    .docs-grid{display:grid;grid-template-columns:1fr 1fr;}
+    .doc-panel{padding:1.8rem 1.6rem;border-right:1px solid var(--border);}
+    .doc-panel:last-child{border-right:none;}
+    .doc-panel:nth-child(n+3){border-top:1px solid var(--border);}
+    .doc-title{font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:.9rem;}
+    .doc-panel p{font-size:.83rem;color:var(--text-dim);line-height:1.8;}
+    .spec-list{list-style:none;}
+    .spec-list li{display:flex;justify-content:space-between;font-size:.8rem;padding:.4rem 0;border-bottom:1px solid var(--border);color:var(--text-dim);}
+    .spec-list li:last-child{border-bottom:none;}
+    .spec-list span{color:var(--text);}
+    .outcomes{display:flex;flex-direction:column;gap:.5rem;}
+    .outcome{display:flex;gap:.7rem;font-size:.8rem;color:var(--text-dim);line-height:1.6;}
+    .outcome::before{content:'→';color:var(--accent);flex-shrink:0;}
+    .doc-links{display:flex;flex-direction:column;gap:.5rem;}
+    .dlink{display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;color:var(--text-muted);text-decoration:none;padding:.5rem .9rem;border-radius:var(--radius);border:1px solid var(--border-light);background:var(--surface-2);transition:border-color .2s,color .2s;}
+    .dlink:hover{border-color:var(--accent-dim);color:var(--accent);}
 
-    /* ── ABOUT ── */
-    .about-grid {
-      display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: start;
-    }
-    .about-text p {
-      color: var(--text-dim); line-height: 1.9; margin-bottom: 1.1rem; font-size: 0.95rem;
-    }
-    .about-text p:first-child { color: var(--text); font-size: 1rem; }
-    .about-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.8rem; }
-    .chip {
-      padding: 0.4rem 1rem; border-radius: 99px;
-      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.04em;
-      background: var(--surface-2); border: 1px solid var(--border-light);
-      color: var(--text-dim);
-    }
-    .chip.active { background: var(--accent-glow); border-color: var(--accent-dim); color: var(--accent); }
+    .mini-teaser{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:3rem;display:flex;justify-content:space-between;align-items:center;gap:2rem;}
+    .mini-teaser-text h3{font-family:var(--font-display);font-size:1.4rem;font-weight:800;margin-bottom:.5rem;}
+    .mini-teaser-text p{color:var(--text-muted);font-size:.88rem;max-width:420px;}
+    .mini-count{font-family:var(--font-display);font-size:3.5rem;font-weight:800;color:var(--accent);line-height:1;text-align:center;}
+    .mini-count-label{font-size:.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;text-align:center;margin-top:.3rem;}
+    .btn-outline{padding:.8rem 1.8rem;border-radius:var(--radius);border:1px solid var(--accent-dim);color:var(--accent);font-size:.82rem;font-weight:500;letter-spacing:.04em;text-decoration:none;transition:background .2s,transform .15s;display:inline-flex;align-items:center;gap:.5rem;white-space:nowrap;}
+    .btn-outline:hover{background:var(--accent-glow);transform:translateY(-1px);}
 
-    .about-card {
-      background: var(--surface);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-lg);
-      padding: 1.8rem;
-    }
-    .about-card-title {
-      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--accent);
-      margin-bottom: 1.4rem; padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .spec-row {
-      display: flex; justify-content: space-between; align-items: baseline;
-      padding: 0.7rem 0; border-bottom: 1px solid var(--border);
-      font-size: 0.82rem;
-    }
-    .spec-row:last-child { border-bottom: none; }
-    .spec-key { color: var(--text-muted); }
-    .spec-val { color: var(--text); text-align: right; }
-    .status-badge {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      font-size: 0.75rem; color: #4caf7d;
-    }
-    .status-badge::before {
-      content: ''; width: 6px; height: 6px; border-radius: 50%;
-      background: #4caf7d;
-      box-shadow: 0 0 6px #4caf7d;
-      animation: pulse 2s ease-in-out infinite;
-    }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+    .skill-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.6rem;transition:border-color .2s;}
+    .skill-card:hover{border-color:var(--border-light);}
+    .skill-icon{font-size:1.4rem;margin-bottom:.9rem;}
+    .skill-title{font-family:var(--font-display);font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:1.2rem;}
+    .skill-row{display:flex;justify-content:space-between;align-items:center;padding:.55rem 0;border-bottom:1px solid var(--border);font-size:.79rem;}
+    .skill-row:last-child{border-bottom:none;}
+    .sname{color:var(--text-dim);}
+    .dots{display:flex;gap:3px;}
+    .d{width:7px;height:7px;border-radius:50%;background:var(--border-light);}
+    .d.on{background:var(--accent);}
+    .d.lo{background:var(--accent-dim);}
 
-    /* ── PROJECTS ── */
-    .projects-list { display: flex; flex-direction: column; gap: 1.5px; }
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+    .contact-text p{color:var(--text-dim);font-size:.93rem;line-height:1.9;margin-bottom:.9rem;}
+    .contact-text a{color:var(--accent);text-decoration:none;}
+    .contact-text a:hover{text-decoration:underline;}
+    .ccard-list{display:flex;flex-direction:column;gap:.6rem;}
+    .ccard{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 1.3rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);text-decoration:none;transition:border-color .2s,transform .15s;}
+    .ccard:hover{border-color:var(--accent-dim);transform:translateX(3px);}
+    .ccard-left{display:flex;align-items:center;gap:.9rem;}
+    .ccard-icon{width:34px;height:34px;border-radius:var(--radius);background:var(--accent-glow);border:1px solid var(--accent-dim);display:flex;align-items:center;justify-content:center;font-size:.9rem;}
+    .ccard-lbl{font-size:.67rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.1rem;}
+    .ccard-val{font-size:.85rem;color:var(--text);}
+    .ccard-arrow{color:var(--text-muted);font-size:.85rem;}
 
-    /* Project card collapsed */
-    .project-item {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      transition: border-color 0.2s;
-    }
-    .project-item:hover { border-color: var(--border-light); }
-    .project-item.open { border-color: var(--accent-dim); }
+    footer{border-top:1px solid var(--border);padding:1.8rem 2.5rem;max-width:1160px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--text-muted);}
+    footer a{color:var(--text-muted);text-decoration:none;}
+    footer a:hover{color:var(--accent);}
 
-    .project-header {
-      display: grid;
-      grid-template-columns: 48px 1fr auto auto;
-      align-items: center; gap: 1.5rem;
-      padding: 1.4rem 1.8rem;
-      cursor: pointer;
-      user-select: none;
-    }
-    .project-num {
-      font-family: var(--font-display);
-      font-size: 0.7rem; font-weight: 700;
-      color: var(--accent-dim); letter-spacing: 0.1em;
-      text-align: center;
-    }
-    .project-title-area h3 {
-      font-family: var(--font-display);
-      font-size: 1.05rem; font-weight: 700;
-      color: var(--text); margin-bottom: 0.2rem;
-    }
-    .project-title-area .project-tagline {
-      font-size: 0.78rem; color: var(--text-muted);
-    }
-    .project-tags-inline { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-    .tag-pill {
-      padding: 0.25rem 0.7rem; border-radius: 99px;
-      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.04em;
-      background: var(--surface-2); border: 1px solid var(--border-light);
-      color: var(--text-muted);
-    }
-    .project-toggle {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: var(--surface-2); border: 1px solid var(--border-light);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--text-muted); font-size: 1rem;
-      transition: background 0.2s, transform 0.3s, color 0.2s;
-      flex-shrink: 0;
-    }
-    .project-item.open .project-toggle {
-      background: var(--accent-glow);
-      border-color: var(--accent-dim);
-      color: var(--accent);
-      transform: rotate(45deg);
-    }
+    .rv{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+    .rv.on{opacity:1;transform:none;}
+    .rv1{transition-delay:.08s;}.rv2{transition-delay:.16s;}.rv3{transition-delay:.24s;}
 
-    /* Project expanded docs panel */
-    .project-docs {
-      display: none;
-      border-top: 1px solid var(--border);
-    }
-    .project-item.open .project-docs { display: block; }
-
-    .docs-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
-    }
-    .doc-section {
-      padding: 2rem 1.8rem;
-      border-right: 1px solid var(--border);
-    }
-    .doc-section:last-child { border-right: none; }
-    .doc-section:nth-child(n+3) { border-top: 1px solid var(--border); }
-    .doc-section-title {
-      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.14em;
-      text-transform: uppercase; color: var(--accent);
-      margin-bottom: 1rem;
-    }
-    .doc-section p {
-      font-size: 0.85rem; color: var(--text-dim); line-height: 1.8;
-    }
-    .doc-spec-list { list-style: none; }
-    .doc-spec-list li {
-      display: flex; justify-content: space-between;
-      font-size: 0.82rem; padding: 0.45rem 0;
-      border-bottom: 1px solid var(--border);
-      color: var(--text-dim);
-    }
-    .doc-spec-list li:last-child { border-bottom: none; }
-    .doc-spec-list span { color: var(--text); font-weight: 400; }
-    .doc-outcomes { display: flex; flex-direction: column; gap: 0.6rem; }
-    .outcome-item {
-      display: flex; gap: 0.8rem; align-items: flex-start;
-      font-size: 0.82rem; color: var(--text-dim); line-height: 1.6;
-    }
-    .outcome-item::before {
-      content: '→'; color: var(--accent); font-size: 0.8rem;
-      flex-shrink: 0; margin-top: 0.1rem;
-    }
-    .doc-links { display: flex; flex-direction: column; gap: 0.6rem; }
-    .doc-link {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      font-size: 0.8rem; color: var(--text-muted); text-decoration: none;
-      padding: 0.55rem 1rem; border-radius: var(--radius);
-      border: 1px solid var(--border-light);
-      background: var(--surface-2);
-      transition: border-color 0.2s, color 0.2s;
-    }
-    .doc-link:hover { border-color: var(--accent-dim); color: var(--accent); }
-    .doc-link-icon { font-size: 0.9rem; }
-
-    /* ── SKILLS ── */
-    .skills-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
-    }
-    .skill-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.8rem;
-      transition: border-color 0.2s;
-    }
-    .skill-card:hover { border-color: var(--border-light); }
-    .skill-card-icon {
-      font-size: 1.5rem; margin-bottom: 1rem;
-    }
-    .skill-card-title {
-      font-family: var(--font-display);
-      font-size: 0.9rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.04em;
-      color: var(--text); margin-bottom: 1.4rem;
-    }
-    .skill-entry {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0.6rem 0; border-bottom: 1px solid var(--border);
-      font-size: 0.82rem;
-    }
-    .skill-entry:last-child { border-bottom: none; }
-    .skill-entry-name { color: var(--text-dim); }
-    .skill-dots { display: flex; gap: 3px; }
-    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border-light); }
-    .dot.on { background: var(--accent); }
-    .dot.on-dim { background: var(--accent-dim); }
-
-    /* ── CONTACT ── */
-    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
-    .contact-intro p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.9; margin-bottom: 1rem; }
-    .contact-intro a { color: var(--accent); text-decoration: none; }
-    .contact-intro a:hover { text-decoration: underline; }
-    .contact-cards { display: flex; flex-direction: column; gap: 0.6rem; }
-    .contact-card {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.2rem 1.4rem;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); text-decoration: none;
-      transition: border-color 0.2s, background 0.2s, transform 0.15s;
-    }
-    .contact-card:hover { border-color: var(--accent-dim); background: var(--surface-2); transform: translateX(3px); }
-    .contact-card-left { display: flex; align-items: center; gap: 1rem; }
-    .contact-card-icon {
-      width: 36px; height: 36px; border-radius: var(--radius);
-      background: var(--accent-glow); border: 1px solid var(--accent-dim);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem;
-    }
-    .contact-card-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.15rem; }
-    .contact-card-val { font-size: 0.88rem; color: var(--text); }
-    .contact-card-arrow { color: var(--text-muted); font-size: 0.9rem; }
-
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2rem 3rem;
-      max-width: 1200px; margin: 0 auto;
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 0.75rem; color: var(--text-muted);
-    }
-    footer a { color: var(--text-muted); text-decoration: none; }
-    footer a:hover { color: var(--accent); }
-
-    /* ── REVEAL ANIMATIONS ── */
-    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
-    .reveal.on { opacity: 1; transform: none; }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links a:not(.nav-cta) { display: none; }
-      #hero, .section-wrap { padding-left: 1.5rem; padding-right: 1.5rem; }
-      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .skills-grid { grid-template-columns: 1fr; }
-      .docs-grid { grid-template-columns: 1fr; }
-      .doc-section { border-right: none !important; }
-      .doc-section:nth-child(n+2) { border-top: 1px solid var(--border); }
-      .project-header { grid-template-columns: 40px 1fr auto; }
-      .project-tags-inline { display: none; }
-      .hero-stats { gap: 1.8rem; flex-wrap: wrap; }
-      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    @media(max-width:900px){
+      nav{padding:1rem 1.5rem;}.wrap{padding:0 1.5rem;}
+      #hero{padding:5rem 1.5rem;}
+      .hero-inner{grid-template-columns:1fr;gap:2.5rem;}
+      .hero-photo-wrap{display:none;}
+      .about-grid,.contact-grid{grid-template-columns:1fr;gap:2rem;}
+      .about-photo-frame{width:100%;height:220px;}
+      .about-photo-accent{width:100%;}
+      .skills-grid{grid-template-columns:1fr;}
+      .docs-grid{grid-template-columns:1fr;}
+      .doc-panel{border-right:none!important;}
+      .doc-panel:nth-child(n+2){border-top:1px solid var(--border);}
+      .proj-hdr{grid-template-columns:40px 1fr auto;}
+      .tag-row{display:none;}
+      .mini-teaser{flex-direction:column;text-align:center;}
+      footer{flex-direction:column;gap:.5rem;text-align:center;}
+      body{cursor:auto;}#cursor,#cursor-ring{display:none;}
     }
   </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════
-     NAV — Edit your name in .nav-logo
-═══════════════════════════════════════════════ -->
+<script>
+const ME = {
+  name:"Long Nguyen", nameShort:"LONG",
+  tagline:"Mechanical & Robotics Engineering Student",
+  headline:["Building the","machines of","tomorrow."], accentWord:2,
+  bio:[
+    "I'm a Mechanical Engineering student specializing in robotics and automation systems. I'm drawn to the intersection of mechanical design, embedded control, and real-world fabrication.",
+    "I've worked on projects ranging from robotic arm kinematics to precision CNC-machined components — always pushing to understand both the math and the metal. I care about designs that are elegant, functional, and manufacturable.",
+    "Currently seeking internship opportunities where I can contribute to teams building intelligent mechanical systems."
+  ],
+  email:"long.nguyen.mech@gmail.com",
+  linkedin:"linkedin.com/in/long-nguyen-a66ab1237",
+  linkedinUrl:"https://www.linkedin.com/in/long-nguyen-a66ab1237/",
+  github:"github.com/longnguyen-me",
+  githubUrl:"https://github.com/longnguyen-me",
+  resumeUrl:"#", location:"Norcross, Georgia", photo:"",
+  degree:"B.S. Mechanical Engineering", university:"Kennesaw State University — SPCEET",
+  year:"Junior (3rd Year)", focus:"Robotics & Automation", status:"Open to Internships",
+  chips:[
+    {label:"Robotics",active:true},{label:"Automation",active:true},
+    {label:"CAD / SolidWorks",active:true},{label:"CNC Machining",active:true},
+    {label:"ROS",active:false},{label:"Embedded Systems",active:false},
+    {label:"FDM 3D Printing",active:false},{label:"Kinematics",active:false},
+  ],
+  projects:[
+    {num:"01",title:"6-DOF Robotic Arm",tagline:"Design, simulation & fabrication of a desktop robotic manipulator",
+     tags:["SolidWorks","ROS","Arduino","3D Print"],
+     overview:"Designed and built a 6-degree-of-freedom desktop robotic arm capable of pick-and-place operations. Full pipeline from kinematic modeling in MATLAB, CAD in SolidWorks, to fabrication and control via ROS and Arduino Mega.",
+     specs:[["Reach","420 mm"],["Payload","250 g"],["DOF","6 (revolute joints)"],["Actuators","MG996R Servos"],["Controller","Arduino Mega + ROS"],["Material","PLA / PETG, Aluminum inserts"]],
+     outcomes:["Achieved ±2mm repeatability in pick-and-place task","Implemented forward & inverse kinematics from scratch","Integrated ROS MoveIt! for path planning","Presented at university engineering showcase"],
+     links:[{icon:"⬡",label:"GitHub Repository",url:"#"},{icon:"◈",label:"CAD Files (GrabCAD)",url:"#"},{icon:"▶",label:"Demo Video",url:"#"},{icon:"↓",label:"Project Report PDF",url:"#"}]},
+    {num:"02",title:"Autonomous Line-Following Robot",tagline:"PID-controlled differential drive bot with sensor array",
+     tags:["C++","PID Control","PCB Design","STM32"],
+     overview:"Built a differential drive robot with an 8-channel IR sensor array and custom PID controller for high-speed line following. Chassis designed in SolidWorks, custom PCB in EasyEDA, programmed in C++ on STM32.",
+     specs:[["Chassis","Custom laser-cut acrylic"],["MCU","STM32F103C8T6"],["Sensors","8x TCRT5000 IR"],["Drive","Differential (2x N20 motors)"],["Control","Tuned PID (Kp/Ki/Kd)"],["Top Speed","1.2 m/s on track"]],
+     outcomes:["2nd place in inter-university robotics competition","Tuned PID manually — learned systematic approach","Designed and ordered first custom PCB","Lap time reduced 40% after control tuning"],
+     links:[{icon:"⬡",label:"GitHub Repository",url:"#"},{icon:"◈",label:"PCB Schematic",url:"#"},{icon:"▶",label:"Competition Run Video",url:"#"}]},
+    {num:"03",title:"CNC-Machined Gearbox Housing",tagline:"GD&T toleranced design through manufacturing on Haas CNC mill",
+     tags:["SolidWorks","GD&T","CNC Milling","Aluminum 6061"],
+     overview:"Designed a two-stage spur gearbox housing for a class manufacturing project. Created fully toleranced GD&T drawings, wrote G-code for a Haas VF-2 CNC mill, and machined from 6061 aluminum billet with three setups.",
+     specs:[["Material","Aluminum 6061-T6"],["Gear Ratio","4:1 (two-stage)"],["Tolerance","±0.05mm on bore"],["Surface","Ra 1.6 μm"],["Machine","Haas VF-2 CNC Mill"],["CAM","Fusion 360"]],
+     outcomes:["Part met all GD&T callouts on first inspection","Learned 3-setup fixturing strategy","Applied ASME Y14.5 standards throughout drawing","Highest grade in manufacturing lab course"],
+     links:[{icon:"◈",label:"SolidWorks CAD File",url:"#"},{icon:"↓",label:"Engineering Drawing PDF",url:"#"},{icon:"▶",label:"Machining Process Video",url:"#"}]},
+  ],
+  miniProjects:[
+    {cat:"Automation",title:"Conveyor Belt Sorter",desc:"Arduino-driven conveyor using color sensor to sort objects into bins.",tags:["Arduino","Color Sensor","3D Print"]},
+    {cat:"CAD",title:"Servo Bracket Library",desc:"Parametric SolidWorks library of 20+ servo mounting brackets for rapid prototyping.",tags:["SolidWorks","Parametric CAD"]},
+    {cat:"Embedded",title:"IMU Balancing Platform",desc:"Self-balancing 2-axis gimbal using MPU-6050 IMU and PID controllers on ESP32.",tags:["ESP32","IMU","PID","C++"]},
+    {cat:"Fabrication",title:"Modular Extrusion Frame",desc:"Reconfigurable test bench from 2020/4040 aluminum extrusions for lab experiments.",tags:["Mechanical Design","Aluminum"]},
+    {cat:"Robotics",title:"IK Simulator",desc:"Python simulation of a 3-DOF planar arm with real-time IK solving via Jacobian pseudo-inverse.",tags:["Python","Kinematics","Simulation"]},
+    {cat:"CAD",title:"Ergonomic Wrist Rest",desc:"Designed and FDM-printed a contoured wrist rest iterated across 4 design versions.",tags:["Fusion 360","FDM","Ergonomics"]},
+  ],
+  skills:[
+    {icon:"⚙️",title:"Mechanical Design",items:[{name:"SolidWorks",dots:5},{name:"Fusion 360",dots:4},{name:"GD&T / Tolerancing",dots:3},{name:"FEA (ANSYS)",dots:3}]},
+    {icon:"🤖",title:"Robotics & Automation",items:[{name:"ROS / ROS2",dots:3},{name:"Kinematics & Dynamics",dots:4},{name:"PID / Control Systems",dots:3},{name:"Arduino / STM32",dots:4}]},
+    {icon:"🔧",title:"Fabrication",items:[{name:"CNC Milling",dots:3},{name:"FDM 3D Printing",dots:5},{name:"Laser Cutting",dots:4},{name:"Welding (MIG)",dots:2}]},
+  ],
+};
+</script>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
 <nav>
-  <a class="nav-logo" href="#hero">LONG<span>.</span>NGUYEN</a>
+  <a class="nav-logo" href="#hero" id="nav-logo-el"></a>
   <div class="nav-links">
-    <a href="#about">About</a>
-    <a href="#projects">Projects</a>
-    <a href="#skills">Skills</a>
-    <a href="#contact">Contact</a>
-    <a href="#contact" class="nav-cta">Hire Me</a>
+    <a href="#about"    onclick="navTo('about',event)">About</a>
+    <a href="#projects" onclick="navTo('projects',event)">Projects</a>
+    <a href="mini.html">All Projects</a>
+    <a href="#skills"   onclick="navTo('skills',event)">Skills</a>
+    <a href="#contact"  onclick="navTo('contact',event)">Contact</a>
   </div>
 </nav>
 
-<!-- ═══════════════════════════════════════════════
-     HERO — Edit headline, description, and stats
-═══════════════════════════════════════════════ -->
+<main>
 <section id="hero">
-  <p class="hero-eyebrow reveal">Mechanical Engineering Student</p>
-  <h1 class="reveal reveal-delay-1">
-    Building the<br>
-    <span class="line2">machines of</span><br>
-    <span class="accent-word">tomorrow.</span>
-  </h1>
-  <p class="hero-desc reveal reveal-delay-2">
-    Undergraduate focused on robotics, automation, and precision mechanical design.
-    I build systems that move, sense, and adapt — from concept to fabrication.
-  </p>
-  <div class="hero-actions reveal reveal-delay-3">
-    <a href="#projects" class="btn-primary">View My Projects ↓</a>
-    <a href="#contact" class="btn-secondary">Get in Touch</a>
-  </div>
-  <div class="hero-stats reveal reveal-delay-3">
-    <!-- ✏️ Edit these stats to match yours -->
+<canvas id="wave-canvas"></canvas>
+<div id="vignette" style="background:linear-gradient(to bottom,#0c0c0e 0%,transparent 16%,transparent 70%,#0c0c0e 100%),linear-gradient(to right,#0c0c0e 0%,transparent 10%,transparent 90%,#0c0c0e 100%);"></div>
+  <div class="hero-inner">
     <div>
-      <div class="hero-stat-val">2+</div>
-      <div class="hero-stat-label">Projects Built</div>
+      <p class="hero-eyebrow rv" id="hero-eyebrow"></p>
+      <h1 class="rv rv1" id="hero-h1"></h1>
+      <p class="hero-desc rv rv2" id="hero-desc"></p>
+      <div class="hero-actions rv rv2">
+        <a href="#projects" class="btn-primary">View Projects ↓</a>
+        <a id="hero-contact-btn" href="#" class="btn-secondary">Get in Touch</a>
+      </div>
     </div>
-    <div>
-      <div class="hero-stat-val">3rd</div>
-      <div class="hero-stat-label">Year Undergrad</div>
-    </div>
-    <div>
-      <div class="hero-stat-val">5</div>
-      <div class="hero-stat-label">Tools Mastered</div>
-    </div>
-    <div>
-      <div class="hero-stat-val">2</div>
-      <div class="hero-stat-label">Lab Positions</div>
+    <div class="hero-photo-wrap rv rv2" style="display:none">
+      <div class="photo-frame" id="photo-frame"></div>
+      <div class="photo-accent-bar"></div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════
-     ABOUT — Edit bio, specs, and interest chips
-═══════════════════════════════════════════════ -->
-<div id="about" class="section-wrap">
-  <p class="section-label reveal">About Me</p>
-  <h2 class="reveal">Who I am.</h2>
-  <p class="section-sub reveal">Engineering student. Builder. Problem solver.</p>
+<div class="wrap"><div id="about" class="sec">
+  <p class="sec-label rv">About Me</p><h2 class="rv">Who I am.</h2>
+  <p class="sec-sub rv">Engineering student. Builder. Problem solver.</p>
   <div class="about-grid">
-    <div class="about-text reveal">
-      <!-- ✏️ Edit your bio paragraphs here -->
-      <p>I'm a third-year Mechanical Engineering student specializing in robotics and automation systems. I'm drawn to the intersection of mechanical design, embedded control, and real-world fabrication.</p>
-      <p>I've worked on projects ranging from robotic arm kinematics to precision CNC-machined components — always pushing to understand both the math and the metal. I care about designs that are elegant, functional, and manufacturable.</p>
-      <p>Currently seeking internship opportunities where I can contribute to teams building intelligent mechanical systems.</p>
-      <!-- ✏️ Edit interest chips — add or remove as needed -->
-      <div class="about-chips">
-        <span class="chip active">Robotics</span>
-        <span class="chip active">Automation</span>
-        <span class="chip active">CAD / SolidWorks</span>
-        <span class="chip active">CNC Machining</span>
-        <span class="chip">ROS</span>
-        <span class="chip">Embedded Systems</span>
-        <span class="chip">FDM 3D Printing</span>
-        <span class="chip">Kinematics</span>
-      </div>
+    <div class="about-photo rv">
+      <div class="about-photo-frame" id="about-photo-frame"></div>
+      <div class="about-photo-accent"></div>
     </div>
-    <div class="reveal reveal-delay-1">
-      <div class="about-card">
-        <div class="about-card-title">Quick Specs</div>
-        <!-- ✏️ Edit your personal details here -->
-        <div class="spec-row"><span class="spec-key">Degree</span><span class="spec-val">B.S. Mechanical Engineering</span></div>
-        <div class="spec-row"><span class="spec-key">University</span><span class="spec-val">Kennesaw State SPCEET</span></div>
-        <div class="spec-row"><span class="spec-key">Year</span><span class="spec-val">Junior (3rd Year)</span></div>
-        <div class="spec-row"><span class="spec-key">Focus</span><span class="spec-val">Robotics & Automation</span></div>
-        <div class="spec-row"><span class="spec-key">Location</span><span class="spec-val">Norcross, Georgia</span></div>
-        <div class="spec-row">
-          <span class="spec-key">Status</span>
-          <span class="spec-val"><span class="status-badge">Open to Internships</span></span>
-        </div>
-      </div>
-    </div>
+    <div class="about-text rv" id="about-bio"></div>
+    <div class="rv rv1"><div class="about-card" id="about-card"></div></div>
   </div>
-</div>
+</div></div>
 
-<!-- ═══════════════════════════════════════════════
-     PROJECTS — Click any project to expand docs
-     HOW TO ADD A PROJECT:
-     1. Copy one entire <div class="project-item"> block
-     2. Paste it below the last one
-     3. Edit the data-project, title, tagline, tags
-     4. Fill in the 4 doc sections inside .docs-grid
-═══════════════════════════════════════════════ -->
-<div id="projects" class="section-wrap">
-  <p class="section-label reveal">Projects</p>
-  <h2 class="reveal">What I've built.</h2>
-  <p class="section-sub reveal">Click any project to expand full documentation — specs, process, outcomes, and links.</p>
+<div class="wrap"><div id="projects" class="sec">
+  <p class="sec-label rv">Projects</p><h2 class="rv">What I've built.</h2>
+  <p class="sec-sub rv">Click any project to expand full documentation.</p>
+  <div class="proj-list rv" id="proj-list"></div>
+</div></div>
 
-  <div class="projects-list">
-
-    <!-- ── PROJECT 1 ── -->
-    <div class="project-item reveal" data-project="1">
-      <div class="project-header" onclick="toggleProject(this)">
-        <div class="project-num">01</div>
-        <div class="project-title-area">
-          <h3>6-DOF Robotic Arm</h3>
-          <div class="project-tagline">Design, simulation & fabrication of a desktop robotic manipulator</div>
-        </div>
-        <div class="project-tags-inline">
-          <span class="tag-pill">SolidWorks</span>
-          <span class="tag-pill">ROS</span>
-          <span class="tag-pill">Arduino</span>
-          <span class="tag-pill">3D Print</span>
-        </div>
-        <div class="project-toggle">+</div>
-      </div>
-      <div class="project-docs">
-        <div class="docs-grid">
-          <!-- ✏️ OVERVIEW — Edit project description -->
-          <div class="doc-section">
-            <div class="doc-section-title">Overview</div>
-            <p>Designed and built a 6-degree-of-freedom desktop robotic arm capable of pick-and-place operations. Full pipeline from kinematic modeling in MATLAB, CAD in SolidWorks, to fabrication and control via ROS and Arduino Mega.</p>
-          </div>
-          <!-- ✏️ SPECS — Edit technical specifications -->
-          <div class="doc-section">
-            <div class="doc-section-title">Technical Specs</div>
-            <ul class="doc-spec-list">
-              <li>Reach <span>420 mm</span></li>
-              <li>Payload <span>250 g</span></li>
-              <li>DOF <span>6 (revolute joints)</span></li>
-              <li>Actuators <span>MG996R Servos</span></li>
-              <li>Controller <span>Arduino Mega + ROS</span></li>
-              <li>Material <span>PLA / PETG, Aluminum inserts</span></li>
-            </ul>
-          </div>
-          <!-- ✏️ OUTCOMES — Edit results and learnings -->
-          <div class="doc-section">
-            <div class="doc-section-title">Outcomes & Learnings</div>
-            <div class="doc-outcomes">
-              <div class="outcome-item">Achieved ±2mm repeatability in pick-and-place task</div>
-              <div class="outcome-item">Implemented forward & inverse kinematics from scratch</div>
-              <div class="outcome-item">Integrated ROS MoveIt! for path planning</div>
-              <div class="outcome-item">Presented at university engineering showcase</div>
-            </div>
-          </div>
-          <!-- ✏️ LINKS — Edit project links -->
-          <div class="doc-section">
-            <div class="doc-section-title">Links & Resources</div>
-            <div class="doc-links">
-              <a href="#" class="doc-link"><span class="doc-link-icon">⬡</span> GitHub Repository</a>
-              <a href="#" class="doc-link"><span class="doc-link-icon">◈</span> CAD Files (GrabCAD)</a>
-              <a href="#" class="doc-link"><span class="doc-link-icon">▶</span> Demo Video</a>
-              <a href="#" class="doc-link"><span class="doc-link-icon">↓</span> Project Report PDF</a>
-            </div>
-          </div>
-        </div>
-      </div>
+<div class="wrap"><div class="sec">
+  <p class="sec-label rv">Side Projects</p><h2 class="rv">Experiments & extras.</h2>
+  <p class="sec-sub rv">Smaller builds, weekend experiments, and quick prototypes.</p>
+  <div class="mini-teaser rv">
+    <div class="mini-teaser-text">
+      <h3>Explore side projects</h3>
+      <p id="mini-teaser-desc"></p>
     </div>
-
-    <!-- ── PROJECT 2 ── -->
-    <div class="project-item reveal reveal-delay-1" data-project="2">
-      <div class="project-header" onclick="toggleProject(this)">
-        <div class="project-num">02</div>
-        <div class="project-title-area">
-          <h3>Autonomous Line-Following Robot</h3>
-          <div class="project-tagline">PID-controlled differential drive bot with sensor array</div>
-        </div>
-        <div class="project-tags-inline">
-          <span class="tag-pill">C++</span>
-          <span class="tag-pill">PID Control</span>
-          <span class="tag-pill">PCB Design</span>
-          <span class="tag-pill">Solidworks</span>
-        </div>
-        <div class="project-toggle">+</div>
-      </div>
-      <div class="project-docs">
-        <div class="docs-grid">
-          <div class="doc-section">
-            <div class="doc-section-title">Overview</div>
-            <p>Built a differential drive robot with an 8-channel IR sensor array and custom PID controller for high-speed line following. Chassis designed in SolidWorks, custom PCB designed in EasyEDA, programmed in C++ on STM32.</p>
-          </div>
-          <div class="doc-section">
-            <div class="doc-section-title">Technical Specs</div>
-            <ul class="doc-spec-list">
-              <li>Chassis <span>Custom laser-cut acrylic</span></li>
-              <li>MCU <span>STM32F103C8T6</span></li>
-              <li>Sensors <span>8x TCRT5000 IR</span></li>
-              <li>Drive <span>Differential (2x N20 motors)</span></li>
-              <li>Control <span>Tuned PID (Kp/Ki/Kd)</span></li>
-              <li>Top Speed <span>1.2 m/s on track</span></li>
-            </ul>
-          </div>
-          <div class="doc-section">
-            <div class="doc-section-title">Outcomes & Learnings</div>
-            <div class="doc-outcomes">
-              <div class="outcome-item">2nd place in inter-university robotics competition</div>
-              <div class="outcome-item">Tuned PID manually — learned systematic approach</div>
-              <div class="outcome-item">Designed and ordered first custom PCB</div>
-              <div class="outcome-item">Lap time reduced 40% after control tuning</div>
-            </div>
-          </div>
-          <div class="doc-section">
-            <div class="doc-section-title">Links & Resources</div>
-            <div class="doc-links">
-              <a href="#" class="doc-link"><span class="doc-link-icon">⬡</span> GitHub Repository</a>
-              <a href="#" class="doc-link"><span class="doc-link-icon">◈</span> PCB Schematic</a>
-              <a href="#" class="doc-link"><span class="doc-link-icon">▶</span> Competition Run Video</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── PROJECT 3 ── -->
-    <div class="project-item reveal reveal-delay-2" data-project="3">
-      <div class="project-header" onclick="toggleProject(this)">
-        <div class="project-num">03</div>
-        <div class="project-title-area">
-          <h3>CNC-Machined Gearbox Housing</h3>
-          <div class="project-tagline">GD&T toleranced design through manufacturing on Haas CNC mill</div>
-        </div>
-        <div class="project-tags-inline">
-          <span class="tag-pill">SolidWorks</span>
-          <span class="tag-pill">GD&T</span>
-          <span class="tag-pill">CNC Milling</span>
-          <span class="tag-pill">Aluminum 6061</span>
-        </div>
-        <div class="project-toggle">+</div>
-      </div>
-      <div class="project-docs">
-        <div class="docs-grid">
-          <div class="doc-section">
-            <div class="doc-section-title">Overview</div>
-            <p>Designed a two-stage spur gearbox housing for a class manufacturing project. Created fully toleranced GD&T drawings, wrote G-code for a Haas VF-2 CNC mill, and machined the part from 6061 aluminum billet with three setups.</p>
-          </div>
-          <div class="doc-section">
-            <div class="doc-section-title">Technical Specs</div>
-            <ul class="doc-spec-list">
-              <li>Material <span>Aluminum 6061-T6</span></li>
-              <li>Gear Ratio <span>4:1 (two-stage)</span></li>
-              <li>Tolerance <span>±0.05mm on bore</span></li>
-              <li>Surface Finish <span>Ra 1.6 μm</span></li>
-              <li>Machine <span>Haas VF-2 CNC Mill</span></li>
-              <li>CAM <span>Fusion 360</span></li>
-            </ul>
-          </div>
-          <div class="doc-section">
-            <div class="doc-section-title">Outcomes & Learnings</div>
-            <div class="doc-outcomes">
-              <div class="outcome-item">Part met all GD&T callouts on first inspection</div>
-              <div class="outcome-item">Learned 3-setup fixturing strategy</div>
-              <div class="outcome-item">Applied ASME Y14.5 standards throughout drawing</div>
-              <div class="outcome-item">Received highest grade in manufacturing lab course</div>
-            </div>
-          </div>
-          <div class="doc-section">
-            <div class="doc-section-title">Links & Resources</div>
-            <div class="doc-links">
-              <a href="#" class="doc-link"><span class="doc-link-icon">◈</span> SolidWorks CAD File</a>
-              <a href="#" class="doc-link"><span class="doc-link-icon">↓</span> Engineering Drawing PDF</a>
-              <a href="#" class="doc-link"><span class="doc-link-icon">▶</span> Machining Process Video</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── ADD MORE PROJECTS BELOW — Copy the block above ── -->
-
+    <div><div class="mini-count" id="mini-count"></div><div class="mini-count-label">Side Projects</div></div>
+    <a href="mini.html" class="btn-outline">View All Side Projects →</a>
   </div>
-</div>
+</div></div>
 
-<!-- ═══════════════════════════════════════════════
-     SKILLS — Edit skill names and dot levels (1-5)
-     To change a level: count how many .dot.on divs
-     there are vs .dot (empty) divs
-═══════════════════════════════════════════════ -->
-<div id="skills" class="section-wrap">
-  <p class="section-label reveal">Skills</p>
-  <h2 class="reveal">What I know.</h2>
-  <p class="section-sub reveal">Tools, software, and methods I use regularly.</p>
+<div class="wrap"><div id="skills" class="sec">
+  <p class="sec-label rv">Skills</p><h2 class="rv">What I know.</h2>
+  <p class="sec-sub rv">Tools, software, and methods I use regularly.</p>
+  <div class="skills-grid" id="skills-grid"></div>
+</div></div>
 
-  <div class="skills-grid">
-    <div class="skill-card reveal">
-      <div class="skill-card-icon">⚙️</div>
-      <div class="skill-card-title">Mechanical Design</div>
-      <!-- ✏️ Edit skill names and dot counts -->
-      <div class="skill-entry">
-        <span class="skill-entry-name">SolidWorks</span>
-        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on-dim"></div></div>
-      </div>
-      <div class="skill-entry">
-        <span class="skill-entry-name">Fusion 360</span>
-        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
-      </div>
-      <div class="skill-entry">
-        <span class="skill-entry-name">GD&T / Tolerancing</span>
-        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on-dim"></div><div class="dot"></div></div>
-      </div>
-      <div class="skill-entry">
-        <span class="skill-entry-name">FEA (ANSYS)</span>
-        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
-      </div>
-    </div>
-
-    <div class="skill-card reveal reveal-delay-1">
-      <div class="skill-card-icon">🤖</div>
-      <div class="skill-card-title">Robotics & Automation</div>
-      <div class="skill-entry">
-        <span class="skill-entry-name">ROS / ROS2</span>
-        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on-dim"></div><div class="dot"></div></div>
-      </div>
-      <div class="skill-entry">
-        <span class="skill-entry-name">Kinematics & Dynamics</span>
-        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
-      </div>
-      <div class="skill-entry">
-        <span class="skill-entry-name">PID / Control Systems</span>
-        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on-dim"></div><div class="dot"></div></div>
-      </div>
-      <div class="skill-entry">
-        <span class="skill-entry-name">Arduino / STM32</span>
-        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on-dim"></div></div>
-      </div>
-    </div>
-
-    <div class="skill-card reveal reveal-delay-2">
-      <div class="skill-card-icon">🔧</div>
-      <div class="skill-card-title">Fabrication</div>
-      <div class="skill-entry">
-        <span class="skill-entry-name">CNC Milling</span>
-        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on-dim"></div><div class="dot"></div></div>
-      </div>
-      <div class="skill-entry">
-        <span class="skill-entry-name">FDM 3D Printing</span>
-        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div>
-      </div>
-      <div class="skill-entry">
-        <span class="skill-entry-name">Laser Cutting</span>
-        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
-      </div>
-      <div class="skill-entry">
-        <span class="skill-entry-name">Welding (MIG)</span>
-        <div class="skill-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on-dim"></div><div class="dot"></div><div class="dot"></div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════
-     CONTACT — Edit email, LinkedIn, GitHub links
-═══════════════════════════════════════════════ -->
-<div id="contact" class="section-wrap">
-  <p class="section-label reveal">Contact</p>
-  <h2 class="reveal">Let's connect.</h2>
-  <p class="section-sub reveal">Open to internships, research roles, and project collaborations.</p>
-
+<div class="wrap"><div id="contact" class="sec">
+  <p class="sec-label rv">Contact</p><h2 class="rv">Let's connect.</h2>
+  <p class="sec-sub rv">Open to internships, research roles, and project collaborations.</p>
   <div class="contact-grid">
-    <div class="contact-intro reveal">
-      <!-- ✏️ Edit contact intro text -->
-      <p>I'm currently looking for summer internship opportunities in robotics, mechanical design, or automation engineering.</p>
-      <p>Whether you're working on something cool or just want to talk engineering — my inbox is open. Best reached at <a href="mailto:alex@example.com">alex@example.com</a>.</p>
-    </div>
-    <div class="contact-cards reveal reveal-delay-1">
-      <!-- ✏️ Edit href links for each card -->
-      <a href="mailto:alex@example.com" class="contact-card">
-        <div class="contact-card-left">
-          <div class="contact-card-icon">✉</div>
-          <div>
-            <div class="contact-card-label">Email</div>
-            <div class="contact-card-val">long.nguyen.mech@gmail.com</div>
-          </div>
-        </div>
-        <span class="contact-card-arrow">↗</span>
-      </a>
-      <a href="https://linkedin.com/in/yourprofile" class="contact-card" target="_blank">
-        <div class="contact-card-left">
-          <div class="contact-card-icon">in</div>
-          <div>
-            <div class="contact-card-label">LinkedIn</div>
-            <div class="contact-card-val">https://www.linkedin.com/in/long-nguyen-a66ab1237/</div>
-          </div>
-        </div>
-        <span class="contact-card-arrow">↗</span>
-      </a>
-      <a href="https://github.com/yourprofile" class="contact-card" target="_blank">
-        <div class="contact-card-left">
-          <div class="contact-card-icon">⬡</div>
-          <div>
-            <div class="contact-card-label">GitHub</div>
-            <div class="contact-card-val">https://github.com/longnguyen-me</div>
-          </div>
-        </div>
-        <span class="contact-card-arrow">↗</span>
-      </a>
-      <a href="#" class="contact-card">
-        <div class="contact-card-left">
-          <div class="contact-card-icon">↓</div>
-          <div>
-            <div class="contact-card-label">Résumé</div>
-            <div class="contact-card-val">Download PDF</div>
-          </div>
-        </div>
-        <span class="contact-card-arrow">↓</span>
-      </a>
-    </div>
+    <div class="contact-text rv" id="contact-text"></div>
+    <div class="ccard-list rv rv1" id="contact-cards"></div>
   </div>
-</div>
-
-<footer>
-  <span>© 2026 Alex Morgan — Mechanical & Robotics Engineering</span>
-  <span>Tucker, Georgia · <a href="mailto:alex@example.com">alex@example.com</a></span>
-</footer>
+</div></div>
+</main>
+<footer id="footer-el"></footer>
 
 <script>
-  // ── Live clock in nav (optional — remove if not wanted)
-  // No clock in this version for cleaner look
+/* ═══════════════════════════════════════════════════════════════
+   3D WAVE SURFACE SIMULATION — WebGL
+   ─────────────────────────────────────────────────────────────
+   • Vertex shader computes wave height from multiple overlapping
+     sine waves (superposition) + a ripple from cursor impact
+   • Surface is a perspective-projected mesh viewed from slightly
+     above — genuinely 3D, not a flat grid
+   • Cursor creates a dampened radial ripple (Gaussian bell)
+     that grows and fades over time
+   • Line-mode wireframe: edges lit by surface normal angle
+     giving depth cues without rasterisation cost
+═══════════════════════════════════════════════════════════════ */
 
-  // ── Scroll reveal
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
-  }, { threshold: 0.08 });
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-  // Trigger hero reveals on load
-  setTimeout(() => {
-    document.querySelectorAll('#hero .reveal').forEach((el, i) => {
-      setTimeout(() => el.classList.add('on'), i * 120);
+/* ── CURSOR ── */
+(function(){
+  const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+  let cx=0,cy=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;},{passive:true});
+  function a(){rx+=(cx-rx)*0.12;ry+=(cy-ry)*0.12;cur.style.left=cx+'px';cur.style.top=cy+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);}
+  a();
+  document.querySelectorAll('a,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';ring.style.transform='translate(-50%,-50%) scale(1.4)';});
+    el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';ring.style.transform='translate(-50%,-50%) scale(1)';});
+  });
+})();
+
+/* ── RENDER DOM ── */
+function mkEl(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!==undefined)e.innerHTML=html;return e;}
+function mkDots(n){let s='';for(let i=0;i<5;i++)s+=`<div class="d${i<n?(i<n-1?' on':' lo'):''}"></div>`;return`<div class="dots">${s}</div>`;}
+
+document.getElementById('nav-logo-el').innerHTML=`${ME.nameShort}<span>.</span>`;
+document.title=`${ME.name} — Portfolio`;
+document.getElementById('hero-eyebrow').textContent=ME.tagline;
+
+const h1el=document.getElementById('hero-h1');
+ME.headline.forEach((line,i)=>{
+  const s=mkEl('span',i===ME.accentWord?'hi':i===1?'muted':'');
+  s.textContent=line;h1el.appendChild(s);
+  if(i<ME.headline.length-1)h1el.appendChild(document.createElement('br'));
+});
+document.getElementById('hero-desc').textContent=ME.bio[0];
+document.getElementById('hero-contact-btn').href=`mailto:${ME.email}`;
+
+/* Photo in About section */
+const apf=document.getElementById('about-photo-frame');
+apf.innerHTML=ME.photo
+  ?`<img src="${ME.photo}" alt="${ME.name}">`
+  :`<div class="about-photo-placeholder">
+      <div class="about-photo-placeholder-icon">◎</div>
+      <div class="about-photo-placeholder-text">Your photo here<br>Set ME.photo<br>in the config</div>
+    </div>`;
+
+const bioEl=document.getElementById('about-bio');
+ME.bio.forEach(p=>bioEl.appendChild(mkEl('p','',p)));
+const chipsDiv=mkEl('div','chips');
+ME.chips.forEach(c=>chipsDiv.appendChild(mkEl('span',`chip${c.active?' hi':''}`,c.label)));
+bioEl.appendChild(chipsDiv);
+
+document.getElementById('about-card').innerHTML=`<div class="card-title">Quick Specs</div>
+  <div class="spec-row"><span class="sk">Degree</span><span class="sv">${ME.degree}</span></div>
+  <div class="spec-row"><span class="sk">University</span><span class="sv">${ME.university}</span></div>
+  <div class="spec-row"><span class="sk">Year</span><span class="sv">${ME.year}</span></div>
+  <div class="spec-row"><span class="sk">Focus</span><span class="sv">${ME.focus}</span></div>
+  <div class="spec-row"><span class="sk">Location</span><span class="sv">${ME.location}</span></div>
+  <div class="spec-row"><span class="sk">Email</span><span class="sv"><a href="mailto:${ME.email}" style="color:var(--accent);text-decoration:none">${ME.email}</a></span></div>
+  <div class="spec-row"><span class="sk">Status</span><span class="sv"><span class="badge-green">${ME.status}</span></span></div>`;
+
+const projList=document.getElementById('proj-list');
+ME.projects.forEach((p,idx)=>{
+  const item=mkEl('div',`proj-item rv${idx?` rv${Math.min(idx,3)}`:''}`);
+  const tagsHtml =p.tags.map(t=>`<span class="tpill">${t}</span>`).join('');
+  const specsHtml=p.specs.map(([k,v])=>`<li>${k} <span>${v}</span></li>`).join('');
+  const outHtml  =p.outcomes.map(o=>`<div class="outcome">${o}</div>`).join('');
+  const linksHtml=p.links.map(l=>`<a href="${l.url}" class="dlink"><span>${l.icon}</span> ${l.label}</a>`).join('');
+  item.innerHTML=`
+    <div class="proj-hdr" onclick="toggleProj(this)">
+      <div class="proj-num">${p.num}</div>
+      <div><h3>${p.title}</h3><div class="proj-tagline">${p.tagline}</div></div>
+      <div class="tag-row">${tagsHtml}</div>
+      <div class="proj-toggle">+</div>
+    </div>
+    <div class="proj-docs"><div class="docs-grid">
+      <div class="doc-panel"><div class="doc-title">Overview</div><p>${p.overview}</p></div>
+      <div class="doc-panel"><div class="doc-title">Technical Specs</div><ul class="spec-list">${specsHtml}</ul></div>
+      <div class="doc-panel"><div class="doc-title">Outcomes & Learnings</div><div class="outcomes">${outHtml}</div></div>
+      <div class="doc-panel"><div class="doc-title">Links & Resources</div><div class="doc-links">${linksHtml}</div></div>
+    </div></div>`;
+  projList.appendChild(item);
+});
+
+document.getElementById('mini-count').textContent=ME.miniProjects.length;
+document.getElementById('mini-teaser-desc').textContent=`${ME.miniProjects.length} smaller builds, weekend experiments, and quick prototypes.`;
+
+const sg=document.getElementById('skills-grid');
+ME.skills.forEach((s,i)=>{
+  const rows=s.items.map(r=>`<div class="skill-row"><span class="sname">${r.name}</span>${mkDots(r.dots)}</div>`).join('');
+  sg.appendChild(mkEl('div',`skill-card rv rv${i}`,`<div class="skill-icon">${s.icon}</div><div class="skill-title">${s.title}</div>${rows}`));
+});
+
+document.getElementById('contact-text').innerHTML=`
+  <p>I'm currently looking for internship opportunities in robotics, mechanical design, or automation engineering.</p>
+  <p>Whether you're working on something cool or just want to talk engineering — my inbox is open. Best reached at <a href="mailto:${ME.email}">${ME.email}</a>.</p>
+  <p>Based in ${ME.location}.</p>`;
+
+document.getElementById('contact-cards').innerHTML=`
+  <a href="mailto:${ME.email}" class="ccard"><div class="ccard-left"><div class="ccard-icon">✉</div><div><div class="ccard-lbl">Email</div><div class="ccard-val">${ME.email}</div></div></div><span class="ccard-arrow">↗</span></a>
+  <a href="${ME.linkedinUrl}" class="ccard" target="_blank"><div class="ccard-left"><div class="ccard-icon">in</div><div><div class="ccard-lbl">LinkedIn</div><div class="ccard-val">${ME.linkedin}</div></div></div><span class="ccard-arrow">↗</span></a>
+  <a href="${ME.githubUrl}" class="ccard" target="_blank"><div class="ccard-left"><div class="ccard-icon">⬡</div><div><div class="ccard-lbl">GitHub</div><div class="ccard-val">${ME.github}</div></div></div><span class="ccard-arrow">↗</span></a>
+  <a href="${ME.resumeUrl}" class="ccard"><div class="ccard-left"><div class="ccard-icon">↓</div><div><div class="ccard-lbl">Résumé</div><div class="ccard-val">Download PDF</div></div></div><span class="ccard-arrow">↓</span></a>`;
+
+document.getElementById('footer-el').innerHTML=`<span>© 2026 ${ME.name} — Mechanical & Robotics Engineering</span><span>${ME.location} · <a href="mailto:${ME.email}">${ME.email}</a></span>`;
+
+function toggleProj(hdr){const item=hdr.closest('.proj-item');const open=item.classList.contains('open');document.querySelectorAll('.proj-item').forEach(p=>p.classList.remove('open'));if(!open)item.classList.add('open');}
+
+/* ── NAV SMOOTH SCROLL ── */
+function navTo(id, e){
+  if(e) e.preventDefault();
+  const el = document.getElementById(id);
+  if(!el) return;
+  const top = el.getBoundingClientRect().top + window.scrollY - 80;
+  window.scrollTo({top, behavior:'smooth'});
+}
+
+/* ── ACTIVE NAV ──────────────────────────────────── */
+(function(){
+  const sections = [
+    {id:'hero',    href:'#hero'},
+    {id:'about',   href:'#about'},
+    {id:'projects',href:'#projects'},
+    {id:'skills',  href:'#skills'},
+    {id:'contact', href:'#contact'},
+  ];
+  const links = document.querySelectorAll('.nav-links a[href^="#"]');
+
+  function onScroll(){
+    const scrollY = window.scrollY + 120; /* offset for nav bar */
+    let current = sections[0].id;
+    sections.forEach(s => {
+      const el = document.getElementById(s.id);
+      if(el && el.offsetTop <= scrollY) current = s.id;
     });
-  }, 100);
-
-  // ── Project accordion toggle
-  function toggleProject(header) {
-    const item = header.closest('.project-item');
-    const isOpen = item.classList.contains('open');
-    // Close all
-    document.querySelectorAll('.project-item').forEach(p => p.classList.remove('open'));
-    // Open clicked if it wasn't already open
-    if (!isOpen) item.classList.add('open');
+    links.forEach(a => {
+      const target = a.getAttribute('href').replace('#','');
+      a.classList.toggle('active', target === current);
+    });
   }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});},{threshold:.07});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+setTimeout(()=>{document.querySelectorAll('#hero .rv').forEach((el,i)=>{setTimeout(()=>el.classList.add('on'),i*110);});},80);
 </script>
 </body>
 </html>
