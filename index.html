@@ -344,19 +344,6 @@ const ME = {
 <footer id="footer-el"></footer>
 
 <script>
-/* ═══════════════════════════════════════════════════════════════
-   3D WAVE SURFACE SIMULATION — WebGL
-   ─────────────────────────────────────────────────────────────
-   • Vertex shader computes wave height from multiple overlapping
-     sine waves (superposition) + a ripple from cursor impact
-   • Surface is a perspective-projected mesh viewed from slightly
-     above — genuinely 3D, not a flat grid
-   • Cursor creates a dampened radial ripple (Gaussian bell)
-     that grows and fades over time
-   • Line-mode wireframe: edges lit by surface normal angle
-     giving depth cues without rasterisation cost
-═══════════════════════════════════════════════════════════════ */
-
 
 (function(){
   const canvas = document.getElementById('wave-canvas');
@@ -402,7 +389,7 @@ const ME = {
       vec2 center = vec2(0.0, 0.0);
       float d = distance(p, center);
 
-      float loopTime = mod(uTime * 0.80, 6.28318);
+      float loopTime = mod(uTime * 0.55, 6.28318);
       float ripple = sin(d * 18.0 - loopTime * 3.0) * exp(-d * 3.2);
 
       float envelope = 0.5 + 0.5 * sin(loopTime - 1.2);
@@ -519,6 +506,7 @@ const ME = {
     [rawMx, rawMy] = toNDC(e.clientX, e.clientY);
   }, { passive: true });
 })();
+
 
 
 
