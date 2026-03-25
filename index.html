@@ -402,7 +402,7 @@ const ME = {
       vec2 center = vec2(0.0, 0.0);
       float d = distance(p, center);
 
-      float loopTime = mod(uTime * 0.55, 6.28318);
+      float loopTime = mod(uTime * 0.80, 6.28318);
       float ripple = sin(d * 18.0 - loopTime * 3.0) * exp(-d * 3.2);
 
       float envelope = 0.5 + 0.5 * sin(loopTime - 1.2);
