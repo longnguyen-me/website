@@ -356,6 +356,47 @@ const ME = {
    • Line-mode wireframe: edges lit by surface normal angle
      giving depth cues without rasterisation cost
 ═══════════════════════════════════════════════════════════════ */
+(function(){
+  const canvas=document.getElementById('wave-canvas');
+  const gl=canvas.getContext('webgl',{antialias:true,alpha:true});
+  if(!gl){canvas.style.display='none';return;}
+  const COLS=80,ROWS=50,MAX_RIPPLES=6,ripples=[];
+  let rawMx=0,rawMy=0,smMx=0,smMy=0;
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;gl.viewport(0,0,canvas.width,canvas.height);}
+  window.addEventListener('resize',resize,{passive:true});resize();
+  const vsrc=`precision mediump float;attribute vec2 aPos;uniform float uTime;uniform float uAspect;uniform vec2 uRipple0;uniform float uRippleT0;uniform float uRippleA0;uniform vec2 uRipple1;uniform float uRippleT1;uniform float uRippleA1;uniform vec2 uRipple2;uniform float uRippleT2;uniform float uRippleA2;uniform vec2 uRipple3;uniform float uRippleT3;uniform float uRippleA3;uniform vec2 uRipple4;uniform float uRippleT4;uniform float uRippleA4;uniform vec2 uRipple5;uniform float uRippleT5;uniform float uRippleA5;uniform vec2 uMouse;varying float vHeight;varying float vDepth;float ripple(vec2 pos,vec2 center,float rt,float amp){float d=distance(pos,center);float wave=sin(d*18.0-rt*2.2)*exp(-d*3.5)*exp(-rt*0.5);return wave*amp;}void main(){vec2 p=aPos;float px=p.x;float pz=p.y;float h=0.0;h+=0.055*sin(px*2.8+uTime*0.28+pz*1.2);h+=0.038*sin(px*5.1-uTime*0.38+pz*2.5);h+=0.028*sin(px*2.0+uTime*0.18-pz*2.8);h+=0.018*cos(px*6.5+uTime*0.50+pz*0.8);h+=0.014*sin(px*9.2-uTime*0.65-pz*1.6);float md=distance(p,uMouse);h+=0.06*exp(-md*md*8.0);h+=ripple(p,uRipple0,uRippleT0,uRippleA0);h+=ripple(p,uRipple1,uRippleT1,uRippleA1);h+=ripple(p,uRipple2,uRippleT2,uRippleA2);h+=ripple(p,uRipple3,uRippleT3,uRippleA3);h+=ripple(p,uRipple4,uRippleT4,uRippleA4);h+=ripple(p,uRipple5,uRippleT5,uRippleA5);vHeight=h;float eyeZ=1.6;float wz=eyeZ-pz*0.32;float projX=(px*eyeZ)/wz;float projY=(pz*eyeZ+h*wz)/wz;vDepth=(pz+1.0)*0.5;gl_Position=vec4(projX,projY,0.0,1.0);}`;
+  const fsrc=`precision mediump float;varying float vHeight;varying float vDepth;void main(){float bright=clamp(0.08+vHeight*3.5+0.04,0.0,1.0);float alpha=bright*(0.15+vDepth*0.85)*0.65;gl_FragColor=vec4(0.91,0.53,0.16,alpha);}`;
+  function compile(t,s){const sh=gl.createShader(t);gl.shaderSource(sh,s);gl.compileShader(sh);return sh;}
+  const prog=gl.createProgram();gl.attachShader(prog,compile(gl.VERTEX_SHADER,vsrc));gl.attachShader(prog,compile(gl.FRAGMENT_SHADER,fsrc));gl.linkProgram(prog);gl.useProgram(prog);
+  const N=COLS*ROWS,pos=new Float32Array(N*2);
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){const i=(r*COLS+c)*2;pos[i]=(c/(COLS-1))*2-1;pos[i+1]=(r/(ROWS-1))*2-1;}
+  const lh=[],lv=[];
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS-1;c++)lh.push(r*COLS+c,r*COLS+c+1);
+  for(let r=0;r<ROWS-1;r++)for(let c=0;c<COLS;c++)lv.push(r*COLS+c,(r+1)*COLS+c);
+  const lidx=new Uint16Array([...lh,...lv]);
+  const vbo=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vbo);gl.bufferData(gl.ARRAY_BUFFER,pos,gl.STATIC_DRAW);
+  const ibo=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ibo);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,lidx,gl.STATIC_DRAW);
+  const ap=gl.getAttribLocation(prog,'aPos');gl.enableVertexAttribArray(ap);gl.vertexAttribPointer(ap,2,gl.FLOAT,false,0,0);
+  const uTime=gl.getUniformLocation(prog,'uTime'),uAspect=gl.getUniformLocation(prog,'uAspect'),uMouse=gl.getUniformLocation(prog,'uMouse');
+  const rU=[];for(let i=0;i<MAX_RIPPLES;i++)rU.push({pos:gl.getUniformLocation(prog,`uRipple${i}`),t:gl.getUniformLocation(prog,`uRippleT${i}`),a:gl.getUniformLocation(prog,`uRippleA${i}`)});
+  gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE);
+  const t0=performance.now();
+  function frame(now){
+    const e=(now-t0)*0.001;
+    smMx+=(rawMx-smMx)*0.055;smMy+=(rawMy-smMy)*0.055;
+    for(let i=ripples.length-1;i>=0;i--){ripples[i].t+=0.016;if(ripples[i].t>4.5)ripples.splice(i,1);}
+    gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform1f(uTime,e);gl.uniform1f(uAspect,canvas.width/canvas.height);gl.uniform2f(uMouse,smMx,smMy);
+    for(let i=0;i<MAX_RIPPLES;i++){const r=ripples[i];if(r){gl.uniform2f(rU[i].pos,r.x,r.y);gl.uniform1f(rU[i].t,r.t);gl.uniform1f(rU[i].a,r.a);}else{gl.uniform2f(rU[i].pos,9,9);gl.uniform1f(rU[i].t,99);gl.uniform1f(rU[i].a,0);}}
+    gl.drawElements(gl.LINES,lidx.length,gl.UNSIGNED_SHORT,0);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  function toNDC(ex,ey){return[(ex/canvas.width)*2-1,-((ey/canvas.height)*2-1)];}
+  window.addEventListener('mousemove',e=>{[rawMx,rawMy]=toNDC(e.clientX,e.clientY);},{passive:true});
+  function spawn(){const nx=(Math.random()*1.6)-.8,ny=(Math.random()*1.6)-.8;if(ripples.length>=MAX_RIPPLES)ripples.shift();ripples.push({x:nx,y:ny,t:0,a:.14+Math.random()*.18});setTimeout(spawn,4000+Math.random()*1000);}
+  setTimeout(spawn,800);setTimeout(spawn,2800);setTimeout(spawn,4500);
+})();
 
 
 /* ── CURSOR ── */
